@@ -91,7 +91,9 @@ export function Rail({
         onClickCapture={onClickCapture}
         onKeyDown={onKeyDown}
         className={cx(
-          "no-scrollbar rail-snap rail-fade -mx-4 flex gap-4 overflow-x-auto px-4 pb-6 pt-2",
+          // Items stretch so every tile in a row is the same height, and the
+          // padding leaves room for the focus ring instead of clipping it.
+          "no-scrollbar rail-snap -mx-4 flex items-stretch gap-4 overflow-x-auto px-4 pb-7 pt-2",
           "scroll-px-4 [touch-action:pan-y] focus-visible:outline-none md:cursor-grab md:gap-5 md:active:cursor-grabbing",
         )}
       >
@@ -137,7 +139,7 @@ export function TileRail({
   games,
   ariaLabel,
   numbered = false,
-  tileClassName = "w-[164px] shrink-0 sm:w-[186px] lg:w-[208px]",
+  tileClassName,
 }: {
   games: Game[];
   ariaLabel: string;
@@ -146,6 +148,11 @@ export function TileRail({
   tileClassName?: string;
 }) {
   const [tint, setTint] = useState<string | null>(null);
+  const slot =
+    tileClassName ??
+    (numbered
+      ? "w-[192px] shrink-0 sm:w-[222px] lg:w-[244px]"
+      : "w-[164px] shrink-0 sm:w-[186px] lg:w-[208px]");
 
   return (
     <div
@@ -155,16 +162,19 @@ export function TileRail({
     >
       <Rail ariaLabel={ariaLabel}>
         {games.map((game, i) => (
-          <div key={game.slug} className={cx("relative", numbered && "pl-8", tileClassName)}>
+          <div
+            key={game.slug}
+            className={cx("relative flex", numbered && "pl-7 sm:pl-9", slot)}
+          >
             {numbered ? (
               <span
                 aria-hidden
-                className="tnum pointer-events-none absolute -left-1 bottom-6 z-0 font-display text-[5rem] font-extrabold leading-none text-ink/10"
+                className="tnum pointer-events-none absolute bottom-3 left-0 z-0 font-display text-[3.75rem] font-extrabold leading-none text-ink/15 sm:text-[4.5rem]"
               >
                 {String(i + 1).padStart(2, "0")}
               </span>
             ) : null}
-            <ProductCard game={game} onActivate={setTint} className="relative z-[1]" />
+            <ProductCard game={game} onActivate={setTint} className="relative z-[1] w-full" />
           </div>
         ))}
       </Rail>

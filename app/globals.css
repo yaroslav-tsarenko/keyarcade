@@ -29,7 +29,7 @@
 
   /* ── Glass — the signature card material ── */
   --glass: rgba(255, 255, 255, 0.72);
-  --glass-strong: rgba(255, 255, 255, 0.92); /* overlays that must occlude */
+  --glass-strong: #ffffff; /* overlays must occlude, not tint */
   --glass-edge: #d9e1ec;                     /* hairline */
   --glass-top: rgba(255, 255, 255, 0.85);    /* inner top highlight */
   --glass-blur: 14px;
@@ -90,7 +90,7 @@
   --deck-sunk: #0a0e18;
 
   --glass: rgba(22, 29, 46, 0.68);
-  --glass-strong: rgba(20, 27, 43, 0.97);
+  --glass-strong: #141b2b;
   --glass-edge: #26314a;
   --glass-top: rgba(244, 247, 252, 0.07);
   --glass-blur: 16px;
@@ -260,7 +260,7 @@
     --deck-band: #131a29;
     --deck-sunk: #0a0e18;
     --glass: rgba(22, 29, 46, 0.68);
-    --glass-strong: rgba(20, 27, 43, 0.97);
+    --glass-strong: #141b2b;
     --glass-edge: #26314a;
     --glass-top: rgba(244, 247, 252, 0.07);
     --ink: #eaf0fa;
@@ -380,24 +380,6 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--ink-muted);
-  }
-
-  /* Rails fade at both edges so a row reads as continuing off-screen. */
-  .rail-fade {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 26px,
-      #000 calc(100% - 26px),
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent 0,
-      #000 26px,
-      #000 calc(100% - 26px),
-      transparent 100%
-    );
   }
 }
 

@@ -43,6 +43,14 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
 
   const game = current.game;
   const pct = discountPct(game);
+  // Real catalogue titles run long; the stage steps its display size down
+  // rather than letting one product push the price and CTA off the fold.
+  const titleSize =
+    game.title.length > 52
+      ? "text-2xl sm:text-3xl lg:text-4xl"
+      : game.title.length > 30
+        ? "text-3xl sm:text-4xl lg:text-5xl"
+        : "text-stage";
 
   function onTouchStart(e: React.TouchEvent) {
     touchX.current = e.touches[0]?.clientX ?? null;
@@ -94,7 +102,12 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
             <div className="min-w-0">
               <p className="eyebrow">{current.label}</p>
 
-              <h1 className="mt-2.5 text-stage text-balance font-extrabold text-ink [overflow-wrap:anywhere]">
+              <h1
+                className={cx(
+                  "mt-2.5 line-clamp-3 text-balance font-display font-extrabold leading-[1.08] text-ink",
+                  titleSize,
+                )}
+              >
                 {game.title}
               </h1>
 
@@ -130,7 +143,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
           {/* Up next */}
           {stage.length > 1 ? (
             <div
-              className="no-scrollbar flex gap-3 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
+              className="no-scrollbar -mx-1.5 flex items-stretch gap-3 overflow-x-auto px-1.5 py-1.5 lg:flex-col lg:overflow-visible"
               role="group"
               aria-label="Up next"
             >
@@ -144,7 +157,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
                     aria-current={active}
                     aria-label={`Show ${slot.game.title}`}
                     className={cx(
-                      "ring-focus ring-focus-flat glass flex w-[220px] shrink-0 items-center gap-3 rounded-tile p-2.5 text-left lg:w-auto lg:flex-1",
+                      "ring-focus ring-focus-flat glass flex w-[228px] shrink-0 items-center gap-3 rounded-tile p-2.5 text-left lg:w-auto lg:flex-1",
                       active && "border-signal bg-signal-tint",
                     )}
                   >

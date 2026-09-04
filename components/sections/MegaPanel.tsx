@@ -64,10 +64,10 @@ export function MegaPanel({
       className="glass-panel absolute inset-x-0 top-full border-x-0 border-b border-t-0 shadow-none"
       onMouseLeave={onClose}
     >
-      <div className="mx-auto grid max-w-[1500px] gap-8 px-4 py-7 md:px-6 lg:grid-cols-[1.3fr_1fr_0.9fr]">
-        <div>
+      <div className="mx-auto grid max-w-[1500px] gap-8 px-4 py-7 md:px-6 lg:grid-cols-[1.25fr_0.75fr_0.9fr]">
+        <div className="min-w-0">
           <p className="eyebrow mb-3">{kind === "platforms" ? "Platforms" : "Genres"}</p>
-          <ul className="grid grid-cols-2 gap-1 sm:grid-cols-3">
+          <ul className="grid max-w-md grid-cols-2 gap-1">
             {links.map((l) => (
               <li key={l.href}>
                 <Link
@@ -83,7 +83,7 @@ export function MegaPanel({
           {covers.length > 0 ? (
             <>
               <p className="eyebrow mb-2.5 mt-6">In stock now</p>
-              <ul className="no-scrollbar flex gap-2.5 overflow-x-auto pb-1">
+              <ul className="no-scrollbar -mx-1 flex max-w-md gap-2.5 overflow-x-auto px-1 pb-1">
                 {covers.slice(0, 8).map((g) => (
                   <li key={g.slug} className="shrink-0">
                     <Link
@@ -103,7 +103,7 @@ export function MegaPanel({
           ) : null}
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="eyebrow mb-3">Support</p>
           <ul className="space-y-0.5">
             {SUPPORT_LINKS.map((l) => (
@@ -119,7 +119,7 @@ export function MegaPanel({
           </ul>
         </div>
 
-        <div>
+        <div className="min-w-0">
           <p className="eyebrow mb-3">Featured deal</p>
           {deal ? (
             <Link
