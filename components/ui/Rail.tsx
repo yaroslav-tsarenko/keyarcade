@@ -143,16 +143,14 @@ export function TileRail({
 }: {
   games: Game[];
   ariaLabel: string;
-  /** Renders oversized rank numerals behind the tiles (Top Charts). */
+  /** Stamps a chart position on each cover (Top Charts). */
   numbered?: boolean;
   tileClassName?: string;
 }) {
   const [tint, setTint] = useState<string | null>(null);
-  const slot =
-    tileClassName ??
-    (numbered
-      ? "w-[192px] shrink-0 sm:w-[222px] lg:w-[244px]"
-      : "w-[164px] shrink-0 sm:w-[186px] lg:w-[208px]");
+  // One slot size for every rail — a ranked row must line up with an unranked
+  // one, so the rank sits on the cover rather than in a gutter beside it.
+  const slot = tileClassName ?? "w-[190px] shrink-0 sm:w-[214px] lg:w-[240px]";
 
   return (
     <div
@@ -162,19 +160,13 @@ export function TileRail({
     >
       <Rail ariaLabel={ariaLabel}>
         {games.map((game, i) => (
-          <div
-            key={game.slug}
-            className={cx("relative flex", numbered && "pl-7 sm:pl-9", slot)}
-          >
-            {numbered ? (
-              <span
-                aria-hidden
-                className="tnum pointer-events-none absolute bottom-3 left-0 z-0 font-display text-[3.75rem] font-extrabold leading-none text-ink/15 sm:text-[4.5rem]"
-              >
-                {String(i + 1).padStart(2, "0")}
-              </span>
-            ) : null}
-            <ProductCard game={game} onActivate={setTint} className="relative z-[1] w-full" />
+          <div key={game.slug} className={cx("flex", slot)}>
+            <ProductCard
+              game={game}
+              rank={numbered ? i + 1 : undefined}
+              onActivate={setTint}
+              className="w-full"
+            />
           </div>
         ))}
       </Rail>

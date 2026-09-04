@@ -31,10 +31,14 @@ import { cx } from "@/lib/cx";
 export function ProductCard({
   game,
   className,
+  rank,
   onActivate,
 }: {
   game: Game;
   className?: string;
+  /** Chart position. Rendered on the cover so a ranked rail keeps exactly the
+   *  same geometry as every other rail. */
+  rank?: number;
   onActivate?: (tint: string) => void;
 }) {
   const pct = discountPct(game);
@@ -66,9 +70,22 @@ export function ProductCard({
           <PosterArt game={game} className="h-full w-full" />
 
           <div className="pointer-events-none absolute inset-x-2.5 top-2.5 flex items-start justify-between gap-2">
-            <Badge className="max-w-[60%] truncate border-white/25 bg-black/45 text-white backdrop-blur-sm">
-              {game.platform}
-            </Badge>
+            <span className="flex min-w-0 items-center gap-1.5">
+              {/* Chart position rides in the badge row rather than across the
+                  cover, so a ranked rail keeps exactly the same geometry as
+                  every other rail and never lands on the artwork's title. */}
+              {rank != null ? (
+                <span
+                  aria-hidden
+                  className="tnum shrink-0 rounded-chip bg-signal px-2 py-1 font-display text-xs font-extrabold leading-none text-on-signal"
+                >
+                  {String(rank).padStart(2, "0")}
+                </span>
+              ) : null}
+              <Badge className="min-w-0 truncate border-white/25 bg-black/45 text-white backdrop-blur-sm">
+                {game.platform}
+              </Badge>
+            </span>
             {pct > 0 ? <PriceSticker pct={pct} size="sm" /> : null}
           </div>
         </div>
