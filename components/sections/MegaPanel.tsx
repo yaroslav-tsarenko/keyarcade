@@ -83,7 +83,7 @@ export function MegaPanel({
           {covers.length > 0 ? (
             <>
               <p className="eyebrow mb-2.5 mt-6">In stock now</p>
-              <ul className="no-scrollbar -mx-1 flex max-w-md gap-2.5 overflow-x-auto px-1 pb-1">
+              <ul className="no-scrollbar -m-2 flex max-w-md gap-2.5 overflow-x-auto p-2">
                 {covers.slice(0, 8).map((g) => (
                   <li key={g.slug} className="shrink-0">
                     <Link

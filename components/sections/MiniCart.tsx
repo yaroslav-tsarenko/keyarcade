@@ -30,7 +30,7 @@ export function MiniCart({ onClose }: { onClose: () => void }) {
           Nothing here yet. Add a key and it shows up instantly.
         </p>
       ) : (
-        <ul className="max-h-72 overflow-y-auto">
+        <ul className="max-h-72 overflow-y-auto py-1.5">
           {lines.slice(0, 4).map((line) => (
             <li key={line.game.slug} className="flex items-center gap-3 px-4 py-2.5">
               <Link

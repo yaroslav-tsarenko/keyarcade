@@ -174,8 +174,11 @@ export function Header() {
         <nav
           aria-label="Browse"
           className={cx(
-            "mx-auto hidden max-w-[1500px] items-center gap-1 overflow-x-auto px-4 md:px-6 lg:flex",
-            condensed ? "pb-1.5" : "pb-2.5",
+            // -mt/-mb cancel the padding that keeps the tabs' focus rings from
+            // being clipped by this row's own horizontal scrolling.
+            "mx-auto -mb-1.5 -mt-2.5 hidden max-w-[1500px] items-center gap-1 overflow-x-auto",
+            "px-4 pt-2.5 md:px-6 lg:flex",
+            condensed ? "pb-3" : "pb-4",
           )}
         >
           {NAV_TABS.map((tab) => {
