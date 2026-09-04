@@ -176,7 +176,7 @@ export interface StageSlot {
 }
 
 export interface HomeData {
-  /** Hero stage: the headline slot plus the "up next" tiles beside it. */
+  /** Hero stage: the headline slot first, then the queue beside it. */
   stage: StageSlot[];
   deals: Game[];
   topCharts: Game[];
@@ -199,6 +199,10 @@ const EMPTY_HOME: HomeData = {
   genres: [],
   ticker: [],
 };
+
+/** How many rows the hero queue holds. Enough to be worth scrolling, few
+ *  enough that the whole list is still one glance per row. */
+const STAGE_MAX = 14;
 
 export async function getHomeData(): Promise<HomeData> {
   const { games } = await getCatalog(80);
@@ -228,12 +232,26 @@ export async function getHomeData(): Promise<HomeData> {
     used.add(g.slug);
     return { label, game: g };
   };
-  const stage = [
+  // The four curated slots lead; the rest of the pool follows so the queue
+  // beside the stage is a list worth scrolling rather than four tiles and a
+  // lot of white. Tail labels state a fact about the row — the discount if
+  // there is one, otherwise the storefront — never an invented category.
+  const curated = [
     { label: "Featured", game: headline },
     take(deals[0], "Deal of the day"),
     take(fresh[0], "New release"),
     take(preorders[0] ?? deals[1], preorders[0] ? "Pre-order" : "Also on sale"),
   ].filter((s): s is StageSlot => s !== null);
+
+  const tail = rest
+    .filter((g) => !used.has(g.slug))
+    .slice(0, STAGE_MAX - curated.length)
+    .map((g) => {
+      const off = discountPct(g);
+      return { label: off > 0 ? `${off}% off` : g.platform, game: g };
+    });
+
+  const stage = [...curated, ...tail];
 
   const cheapest = [...rest].sort((a, b) => a.price - b.price);
   const underTenPool = rest.filter((g) => g.price < 10);

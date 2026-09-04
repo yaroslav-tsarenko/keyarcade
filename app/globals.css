@@ -395,6 +395,20 @@
   .rounded-panel { border-radius: var(--radius-panel); }
   .rounded-control { border-radius: var(--radius-control); }
 
+  /* A scrollbar you can see but barely notice — used where the fact that a
+     list scrolls is information the shopper needs. */
+  .scroll-slim {
+    scrollbar-width: thin;
+    scrollbar-color: var(--chip-edge) transparent;
+  }
+  .scroll-slim::-webkit-scrollbar { width: 6px; height: 6px; }
+  .scroll-slim::-webkit-scrollbar-track { background: transparent; }
+  .scroll-slim::-webkit-scrollbar-thumb {
+    background: var(--chip-bg);
+    border-radius: 999px;
+  }
+  .scroll-slim:hover::-webkit-scrollbar-thumb { background: var(--chip-edge); }
+
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 

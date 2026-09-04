@@ -15,29 +15,50 @@ import { PLATFORM_LINKS } from "@/lib/nav";
 import { cx } from "@/lib/cx";
 
 const ADVANCE_MS = 7000;
+/** Only the curated head auto-advances; the rest of the queue is browsed. */
+const AUTO_SLOTS = 4;
 
 /**
- * The hero is a dashboard, not a banner: one large stage plus the row of
- * tiles waiting behind it. Clicking an "up next" tile promotes it into the
+ * The hero is a dashboard, not a banner: one large stage and, beside it, the
+ * queue of everything waiting behind it. Picking a row promotes it into the
  * stage, exactly like flipping through a console's featured row — and the
  * stage's cover tints the whole band behind it.
+ *
+ * The queue is exactly as tall as the stage and scrolls inside itself, so the
+ * band's height is set by the product on show rather than by how many rows
+ * happen to be queued.
  */
 export function Hero({ stage }: { stage: StageSlot[] }) {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchX = useRef<number | null>(null);
+  const queueRef = useRef<HTMLDivElement>(null);
+  const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   const current = stage[index] ?? stage[0];
+  const autoCount = Math.min(AUTO_SLOTS, stage.length);
 
   useEffect(() => {
-    if (paused || stage.length < 2) return;
+    if (paused || autoCount < 2) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const id = window.setInterval(
-      () => setIndex((i) => (i + 1) % stage.length),
+      // Auto-advance stays inside the curated head; cycling the whole queue
+      // would keep yanking the list out from under whoever is reading it.
+      () => setIndex((i) => (i < autoCount ? (i + 1) % autoCount : i)),
       ADVANCE_MS,
     );
     return () => window.clearInterval(id);
-  }, [paused, stage.length]);
+  }, [paused, autoCount]);
+
+  // Keep the active row visible when the selection moves without a click.
+  useEffect(() => {
+    const row = rowRefs.current[index];
+    const box = queueRef.current;
+    if (!row || !box) return;
+    const above = row.offsetTop < box.scrollTop;
+    const below = row.offsetTop + row.offsetHeight > box.scrollTop + box.clientHeight;
+    if (above || below) row.scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }, [index]);
 
   if (!current) return null;
 
@@ -77,7 +98,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
       aria-label="Featured games"
     >
       <div className="mx-auto max-w-[1500px] px-4 py-6 md:px-6 md:py-9">
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_282px]">
+        <div className="grid items-stretch gap-4 lg:grid-cols-[minmax(0,1fr)_306px]">
           {/* The stage */}
           <div
             onTouchStart={onTouchStart}
@@ -140,43 +161,77 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
             </div>
           </div>
 
-          {/* Up next */}
+          {/* The queue — a horizontal strip on phones, a vertical list beside
+              the stage from lg up. From lg the panel is taken out of flow and
+              pinned to the cell, so the band's height is set by the stage and
+              the queue scrolls inside whatever is left. Without this the row
+              would grow to fit fourteen rows and stretch the stage with it. */}
           {stage.length > 1 ? (
-            <div
-              className="no-scrollbar -mx-1.5 flex items-stretch gap-3 overflow-x-auto px-1.5 py-1.5 lg:flex-col lg:overflow-visible"
-              role="group"
-              aria-label="Up next"
-            >
-              {stage.map((slot, i) => {
-                const active = i === index;
-                return (
-                  <button
-                    key={slot.game.slug}
-                    type="button"
-                    onClick={() => setIndex(i)}
-                    aria-current={active}
-                    aria-label={`Show ${slot.game.title}`}
-                    className={cx(
-                      "ring-focus ring-focus-flat glass flex w-[228px] shrink-0 items-center gap-3 rounded-tile p-2.5 text-left lg:w-auto lg:flex-1",
-                      active && "border-signal bg-signal-tint",
-                    )}
-                  >
-                    <span className="size-14 shrink-0 overflow-hidden rounded-[12px] bg-deck-sunk">
-                      <PosterArt game={slot.game} className="h-full w-full" />
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="eyebrow block truncate">{slot.label}</span>
-                      <span className="mt-1 block truncate text-sm font-semibold text-ink">
-                        {slot.game.title}
+            <div className="relative">
+            <div className="glass flex flex-col rounded-panel p-2.5 lg:absolute lg:inset-0 lg:p-3">
+              <div className="flex items-baseline justify-between px-1 pb-2">
+                <p className="eyebrow">Up next</p>
+                <p className="tnum text-xs text-ink-faint">
+                  {index + 1}/{stage.length}
+                </p>
+              </div>
+
+              <div
+                ref={queueRef}
+                role="group"
+                aria-label="Up next"
+                className={cx(
+                  // `no-scrollbar` would win over the slim bar, and a queue
+                  // that scrolls should look like it does.
+                  "scroll-slim -m-1 flex gap-2.5 overflow-x-auto p-1",
+                  "lg:min-h-0 lg:flex-1 lg:snap-y lg:snap-proximity lg:flex-col lg:gap-1.5 lg:overflow-x-hidden lg:overflow-y-auto",
+                )}
+              >
+                {stage.map((slot, i) => {
+                  const active = i === index;
+                  const off = discountPct(slot.game);
+                  return (
+                    <button
+                      key={slot.game.slug}
+                      ref={(el) => {
+                        rowRefs.current[i] = el;
+                      }}
+                      type="button"
+                      onClick={() => setIndex(i)}
+                      aria-current={active}
+                      aria-label={`Show ${slot.game.title}`}
+                      className={cx(
+                        "ring-focus ring-focus-flat flex w-[228px] shrink-0 items-center gap-3 rounded-tile p-2 text-left",
+                        "transition-colors duration-[var(--dur-2)] lg:w-auto lg:snap-start",
+                        active ? "bg-signal-tint" : "hover:bg-chip",
+                      )}
+                    >
+                      <span className="size-12 shrink-0 overflow-hidden rounded-[10px] bg-deck-sunk">
+                        <PosterArt game={slot.game} className="h-full w-full" />
                       </span>
-                      <Price
-                        eur={slot.game.price}
-                        className="tnum mt-0.5 block text-xs font-bold text-signal-deep"
-                      />
-                    </span>
-                  </button>
-                );
-              })}
+                      <span className="min-w-0 flex-1">
+                        <span className="eyebrow block truncate">{slot.label}</span>
+                        <span className="mt-0.5 block truncate text-sm font-semibold text-ink">
+                          {slot.game.title}
+                        </span>
+                        <span className="mt-0.5 flex items-baseline gap-1.5">
+                          <Price
+                            eur={slot.game.price}
+                            className="tnum text-xs font-bold text-signal-deep"
+                          />
+                          {off > 0 && slot.game.wasPrice ? (
+                            <Price
+                              eur={slot.game.wasPrice}
+                              className="tnum text-[0.6875rem] text-ink-faint line-through"
+                            />
+                          ) : null}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
             </div>
           ) : null}
         </div>
