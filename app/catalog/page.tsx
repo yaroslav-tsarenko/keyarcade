@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCatalogWall } from "@/lib/catalog";
+import { getCatalogWall, WALL_PAGES } from "@/lib/catalog";
 import { PLATFORMS, GENRES, KINDS, type Platform, type Genre, type ProductKind } from "@/lib/mock-data";
 import { CatalogBrowser, type Sort } from "@/components/sections/CatalogBrowser";
 
@@ -101,6 +101,9 @@ export default async function CatalogPage({
         <CatalogBrowser
           key={browserKey}
           games={games}
+          total={wall.total}
+          query={{ platform, genre, q: effectiveQ }}
+          loadedPages={WALL_PAGES}
           initialPlatform={platform}
           initialGenre={genre}
           initialKind={initialKind}

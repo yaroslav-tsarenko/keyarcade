@@ -204,13 +204,20 @@ export async function getCatalog(
   }
 }
 
+// Depth of the initial catalog wall. The shop pre-loads WALL_PAGES pages of
+// CATALOG_PAGE_SIZE, then the client keeps requesting page WALL_PAGES+1, +2…
+// from /api/catalog, so the whole (often multi-thousand) match set is reachable
+// by "Load more" rather than capped at the pre-loaded pool.
+export const CATALOG_PAGE_SIZE = 100;
+export const WALL_PAGES = 5;
+
 // Deep catalog wall: pulls several pages in parallel (all sharing the same
 // platform/genre/search filter) and merges them into one de-duplicated set, so
 // the shop wall is hundreds of live keys deep instead of a single 96-item page.
 export async function getCatalogWall(
   opts: Omit<CatalogQuery, "page" | "limit"> & { pages?: number; pageSize?: number } = {},
 ): Promise<{ games: Game[]; total: number }> {
-  const { pages = 5, pageSize = 100, platform, genre, q } = opts;
+  const { pages = WALL_PAGES, pageSize = CATALOG_PAGE_SIZE, platform, genre, q } = opts;
   const results = await Promise.all(
     Array.from({ length: pages }, (_, i) =>
       getCatalog({ limit: pageSize, page: i + 1, platform, genre, q }),

@@ -136,8 +136,17 @@ function Filters({
   );
 }
 
+function eqSet<T>(a: Set<T>, b: Set<T>): boolean {
+  if (a.size !== b.size) return false;
+  for (const v of a) if (!b.has(v)) return false;
+  return true;
+}
+
 export function CatalogBrowser({
   games,
+  total,
+  query,
+  loadedPages = 1,
   initialPlatform,
   initialGenre,
   initialKind,
@@ -145,12 +154,27 @@ export function CatalogBrowser({
   deals = false,
 }: {
   games: Game[];
+  /** Kinguin's true match count for the active platform/genre/search query —
+   *  usually far larger than the fetched pool, so it's the honest shelf size. */
+  total?: number;
+  /** The server query behind this wall, so "Load more" can pull deeper pages. */
+  query?: { platform?: string; genre?: string; q?: string };
+  /** How many pages the server already pre-loaded; the client resumes after. */
+  loadedPages?: number;
   initialPlatform?: Platform;
   initialGenre?: Genre;
   initialKind?: ProductKind;
   initialSort?: Sort;
   deals?: boolean;
 }) {
+  // The wall grows as the shopper pulls deeper pages from the server. `pool`
+  // holds every key loaded so far; the price ceiling stays pinned to the first
+  // batch so the "pristine" check below doesn't drift as the pool expands.
+  const [pool, setPool] = useState<Game[]>(games);
+  const [page, setPage] = useState(loadedPages);
+  const [loading, setLoading] = useState(false);
+  const [exhausted, setExhausted] = useState(false);
+
   const maxAvailable = useMemo(
     () => Math.max(10, Math.ceil(games.reduce((m, g) => Math.max(m, g.price), 0))),
     [games],
@@ -158,13 +182,13 @@ export function CatalogBrowser({
 
   // Only offer filter values that actually match at least one in-stock title,
   // so a shopper never selects a facet (e.g. Platform → GOG) that returns zero
-  // results. Options are derived live from the current catalog page.
+  // results. Options are derived live from the loaded pool.
   const options = useMemo<FilterOptions>(() => {
     const platforms = new Set<Platform>();
     const genres = new Set<Genre>();
     const regions = new Set<Region>();
     const kinds = new Set<ProductKind>();
-    for (const g of games) {
+    for (const g of pool) {
       platforms.add(g.platform);
       genres.add(g.genre);
       regions.add(g.region);
@@ -176,7 +200,7 @@ export function CatalogBrowser({
       regions: REGIONS.filter((r) => regions.has(r)),
       kinds: KINDS.filter((k) => kinds.has(k)),
     };
-  }, [games]);
+  }, [pool]);
 
   const [state, setState] = useState<FilterState>({
     platforms: new Set(initialPlatform ? [initialPlatform] : []),
@@ -193,7 +217,7 @@ export function CatalogBrowser({
     setState({ platforms: new Set(), genres: new Set(), regions: new Set(), kinds: new Set(), maxPrice: maxAvailable });
 
   const filtered = useMemo(() => {
-    let list = games.filter((g) => {
+    let list = pool.filter((g) => {
       if (state.platforms.size && !state.platforms.has(g.platform)) return false;
       if (state.genres.size && !state.genres.has(g.genre)) return false;
       if (state.regions.size && !state.regions.has(g.region)) return false;
@@ -215,9 +239,62 @@ export function CatalogBrowser({
         break;
     }
     return list;
-  }, [games, state, sort]);
+  }, [pool, state, sort]);
 
   const shown = filtered.slice(0, visible);
+
+  // "Load more" first reveals more of what's already loaded; once the current
+  // filtered view is exhausted it pulls the next server page (deeper into the
+  // full match set) and appends any new keys to the pool.
+  const canFetchMore = !exhausted && query != null && total != null && pool.length < total;
+  const hasMore = visible < filtered.length || canFetchMore;
+
+  const loadMore = async () => {
+    if (visible < filtered.length) {
+      setVisible((v) => v + STEP);
+      return;
+    }
+    if (loading || !canFetchMore) return;
+    setLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (query?.platform) params.set("platform", query.platform);
+      if (query?.genre) params.set("genre", query.genre);
+      if (query?.q) params.set("q", query.q);
+      params.set("page", String(page + 1));
+      const res = await fetch(`/api/catalog?${params}`);
+      const data = (await res.json()) as { games?: Game[] };
+      setPage((p) => p + 1);
+      const incoming = data.games ?? [];
+      if (incoming.length === 0) {
+        setExhausted(true);
+      } else {
+        setPool((prev) => {
+          const seen = new Set(prev.map((g) => g.slug));
+          const merged = [...prev];
+          for (const g of incoming) if (!seen.has(g.slug)) merged.push(g);
+          return merged;
+        });
+        setVisible((v) => v + STEP);
+      }
+    } catch {
+      setExhausted(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // The headline count reflects Kinguin's true match total for this query (the
+  // real shelf — often thousands), not just the pool we pre-loaded. Once the
+  // shopper narrows with any client-side filter the server total no longer
+  // applies, so fall back to the honest count of what actually matches.
+  const pristine =
+    state.regions.size === 0 &&
+    state.maxPrice === maxAvailable &&
+    eqSet(state.platforms, new Set(initialPlatform ? [initialPlatform] : [])) &&
+    eqSet(state.genres, new Set(initialGenre ? [initialGenre] : [])) &&
+    eqSet(state.kinds, new Set(initialKind ? [initialKind] : []));
+  const shelfCount = pristine && total != null ? Math.max(total, filtered.length) : filtered.length;
 
   const filterPanel = (
     <Filters state={state} setState={setState} options={options} maxAvailable={maxAvailable} onClear={clear} />
@@ -250,7 +327,7 @@ export function CatalogBrowser({
 
         <div className="min-w-0 flex-1">
           <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-            <p className="text-sm font-semibold text-ink-muted">{filtered.length} titles</p>
+            <p className="text-sm font-semibold text-ink-muted">{shelfCount.toLocaleString()} titles</p>
             <label className="flex items-center gap-2 rounded-control border border-edge bg-[var(--glass)] px-3 py-2 text-sm font-bold lift-sm">
               <span className="uppercase tracking-wide text-ink-muted">Sort</span>
               <span className="relative flex items-center">
@@ -280,14 +357,15 @@ export function CatalogBrowser({
                   <ProductCard key={`${g.slug}-${i}`} game={g} />
                 ))}
               </div>
-              {visible < filtered.length && (
+              {hasMore && (
                 <div className="mt-12 flex justify-center">
                   <button
                     type="button"
-                    onClick={() => setVisible((v) => v + STEP)}
-                    className="rounded-control border border-edge bg-ink px-8 py-3.5 text-base font-semibold text-ink-invert lift-sm transition-[filter] hover:brightness-[1.06] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none"
+                    onClick={loadMore}
+                    disabled={loading}
+                    className="rounded-control border border-edge bg-ink px-8 py-3.5 text-base font-semibold text-ink-invert lift-sm transition-[filter] hover:brightness-[1.06] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none disabled:cursor-wait disabled:opacity-70"
                   >
-                    Load more keys
+                    {loading ? "Loading…" : "Load more keys"}
                   </button>
                 </div>
               )}
