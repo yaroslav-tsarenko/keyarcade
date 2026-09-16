@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getCatalog } from "@/lib/catalog";
+import { getCatalogWall } from "@/lib/catalog";
 import { PLATFORMS, GENRES, KINDS, type Platform, type Genre, type ProductKind } from "@/lib/mock-data";
 import { CatalogBrowser, type Sort } from "@/components/sections/CatalogBrowser";
 
@@ -44,10 +44,16 @@ export default async function CatalogPage({
   // for them we search Kinguin by name too — otherwise the landing is empty.
   const effectiveQ = q ?? (kind === "Gift card" ? "gift card" : undefined);
 
-  // Push platform + search down to Kinguin so a filtered landing (e.g. a
-  // platform tile) comes back stocked instead of empty. Pull a wide page so
-  // the client-side filters have enough to work with.
-  const { games } = await getCatalog({ limit: 96, platform, q: effectiveQ });
+  // Push platform + genre + search down to Kinguin so a filtered landing (a
+  // platform tile, a genre chip) is drawn from the full 120k+ catalogue, not
+  // carved out of one small page. Pull several pages deep so the wall is
+  // hundreds of keys and the client-side filters have real breadth to work with.
+  const wall = await getCatalogWall({ platform, genre, q: effectiveQ });
+  // Kinguin already filtered by genre, but a title tagged e.g. [Action, Racing,
+  // Sport] can be classified under a different facet by our local mapper, which
+  // the client-side genre filter would then drop. Trust Kinguin's match and
+  // label every returned key with the genre the shopper actually asked for.
+  const games = genre ? wall.games.map((g) => ({ ...g, genre })) : wall.games;
 
   // Never pre-select a filter that would empty the page: if the returned pool
   // has nothing of this kind, land unfiltered rather than on "no results".

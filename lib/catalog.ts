@@ -138,17 +138,21 @@ function toGame(p: KinguinProduct): Game {
 }
 
 // Live-only catalog: only real Kinguin products are shown. No mock fallback.
-// `platform`/`q` are pushed down to Kinguin so filtered pages (e.g. a platform
-// tile) come back populated instead of empty.
+// `platform`/`genre`/`q` are pushed down to Kinguin so filtered pages (e.g. a
+// platform tile or a genre landing) come back populated straight from the full
+// 120k+ catalogue instead of being carved out of one small page client-side.
 export interface CatalogQuery {
   limit?: number;
   page?: number;
   platform?: string;
+  genre?: string;
   q?: string;
 }
 
 // Our canonical platform names differ from the exact strings Kinguin filters on
-// (e.g. "Xbox" → "Xbox One", "GOG" → "GOG.com"), so translate before querying.
+// (verified against the live feed: "Xbox" → "Xbox One", "GOG" → "GOG.com",
+// "Ubisoft Connect" → "Ubisoft", "Rockstar" → "Rockstar Games"). Sending the
+// wrong string returns zero results, which is what left platform tiles empty.
 const KINGUIN_PLATFORM: Record<string, string> = {
   Steam: "Steam",
   Epic: "Epic Games",
@@ -156,17 +160,37 @@ const KINGUIN_PLATFORM: Record<string, string> = {
   PlayStation: "PlayStation",
   Nintendo: "Nintendo",
   GOG: "GOG.com",
+  "Ubisoft Connect": "Ubisoft",
+  "EA App": "EA App",
+  "Battle.net": "Battle.net",
+  Rockstar: "Rockstar Games",
+};
+
+// Our facet names differ from Kinguin's genre strings too ("Sports" → "Sport",
+// "Sim" → "Simulation", "Shooter" → "FPS"); the rest match verbatim. Verified
+// against the live feed — a wrong string returns zero, emptying the landing.
+const KINGUIN_GENRE: Record<string, string> = {
+  Sports: "Sport",
+  Sim: "Simulation",
+  Shooter: "FPS",
 };
 
 export async function getCatalog(
   opts: CatalogQuery | number = {},
 ): Promise<{ games: Game[]; live: boolean; total: number }> {
-  const { limit = 48, page: pageNo = 1, platform, q } =
+  const { limit = 48, page: pageNo = 1, platform, genre, q } =
     typeof opts === "number" ? { limit: opts } : opts;
   if (!isKinguinConfigured()) return { games: [], live: false, total: 0 };
   try {
     const kinguinPlatform = platform ? (KINGUIN_PLATFORM[platform] ?? platform) : undefined;
-    const page = await listProducts({ limit, page: pageNo, platform: kinguinPlatform, name: q });
+    const kinguinGenre = genre ? (KINGUIN_GENRE[genre] ?? genre) : undefined;
+    const page = await listProducts({
+      limit,
+      page: pageNo,
+      platform: kinguinPlatform,
+      genre: kinguinGenre,
+      name: q,
+    });
     const games = page.items
       .filter((i) => i.priceEur > 0 && i.qty > 0)
       .map(toGame)
@@ -178,6 +202,25 @@ export async function getCatalog(
     console.error("Kinguin catalog fetch failed:", e);
     return { games: [], live: false, total: 0 };
   }
+}
+
+// Deep catalog wall: pulls several pages in parallel (all sharing the same
+// platform/genre/search filter) and merges them into one de-duplicated set, so
+// the shop wall is hundreds of live keys deep instead of a single 96-item page.
+export async function getCatalogWall(
+  opts: Omit<CatalogQuery, "page" | "limit"> & { pages?: number; pageSize?: number } = {},
+): Promise<{ games: Game[]; total: number }> {
+  const { pages = 5, pageSize = 100, platform, genre, q } = opts;
+  const results = await Promise.all(
+    Array.from({ length: pages }, (_, i) =>
+      getCatalog({ limit: pageSize, page: i + 1, platform, genre, q }),
+    ),
+  );
+  const bySlug = new Map<string, Game>();
+  for (const r of results) for (const g of r.games) if (!bySlug.has(g.slug)) bySlug.set(g.slug, g);
+  const games = [...bySlug.values()];
+  const total = Math.max(results[0]?.total ?? 0, games.length);
+  return { games, total };
 }
 
 // Slugs are `slugify(name, kinguinId)`, so the trailing segment is the id we

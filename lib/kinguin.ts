@@ -146,6 +146,7 @@ export interface ListParams {
   limit?: number;
   name?: string;
   platform?: string;
+  genre?: string;
   sortBy?: string;
   sortType?: "asc" | "desc";
 }
@@ -156,6 +157,7 @@ export async function listProducts(params: ListParams = {}): Promise<ProductPage
   qs.set("limit", String(params.limit ?? 24));
   if (params.name) qs.set("name", params.name);
   if (params.platform) qs.set("platform", params.platform);
+  if (params.genre) qs.set("genre", params.genre);
   if (params.sortBy) qs.set("sortBy", params.sortBy);
   if (params.sortType) qs.set("sortType", params.sortType);
 
