@@ -7,9 +7,9 @@ import { useTheme } from "@/components/ui/ThemeProvider";
 
 const REASSURANCE = [
   "Instant key delivery",
-  "Official distributors",
-  "24/7 support",
-  "Every key verified",
+  "Original keys",
+  "Pay in EUR, GBP or USD",
+  "14-day refund window",
 ];
 
 /** The slim strip above the deck: what the store promises, plus the two

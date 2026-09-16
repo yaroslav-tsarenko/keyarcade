@@ -1,11 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 
-// Colour Visa / Mastercard / PCI DSS marks, used at checkout and in the footer.
+// Colour Visa / Mastercard marks, used at checkout and in the footer.
 // Real brand SVGs live in /public/payments (never greyscale).
 const MARKS = [
   { src: "/payments/visa.svg", alt: "Visa" },
   { src: "/payments/mastercard.svg", alt: "Mastercard" },
-  { src: "/payments/pci-dss.svg", alt: "PCI DSS compliant" },
 ];
 
 export function PaymentMarks({ className = "" }: { className?: string }) {

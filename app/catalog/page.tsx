@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getCatalog } from "@/lib/catalog";
-import { PLATFORMS, KINDS, type Platform, type ProductKind } from "@/lib/mock-data";
-import { CatalogBrowser } from "@/components/sections/CatalogBrowser";
+import { PLATFORMS, GENRES, KINDS, type Platform, type Genre, type ProductKind } from "@/lib/mock-data";
+import { CatalogBrowser, type Sort } from "@/components/sections/CatalogBrowser";
 
 export const metadata: Metadata = {
   title: "Catalog",
@@ -11,35 +11,67 @@ export const metadata: Metadata = {
 function parsePlatform(v?: string): Platform | undefined {
   return PLATFORMS.find((p) => p.toLowerCase() === v?.toLowerCase());
 }
+function parseGenre(v?: string): Genre | undefined {
+  return GENRES.find((g) => g.toLowerCase() === v?.toLowerCase());
+}
 function parseKind(v?: string): ProductKind | undefined {
   return KINDS.find((k) => k.toLowerCase() === v?.toLowerCase());
+}
+
+// New releases and Top charts are catalogue *views*, not just the raw wall:
+// each lands on a distinct initial ordering so the page visibly differs from
+// the default shelf.
+function parseSort(v?: string): { sort?: Sort; heading?: string } {
+  if (v === "new") return { sort: "Newest", heading: "New releases" };
+  if (v === "top") return { sort: "Price: high to low", heading: "Top charts" };
+  return {};
 }
 
 export default async function CatalogPage({
   searchParams,
 }: {
-  searchParams: Promise<{ platform?: string; kind?: string; deals?: string; q?: string }>;
+  searchParams: Promise<{ platform?: string; genre?: string; kind?: string; deals?: string; sort?: string; q?: string }>;
 }) {
   const sp = await searchParams;
   const platform = parsePlatform(sp.platform);
+  const genre = parseGenre(sp.genre);
   const kind = parseKind(sp.kind);
   const deals = sp.deals === "1";
+  const { sort, heading: sortHeading } = parseSort(sp.sort);
   const q = sp.q?.trim() || undefined;
+
+  // Gift cards rarely match by our derived "kind" alone, so when a shopper asks
+  // for them we search Kinguin by name too — otherwise the landing is empty.
+  const effectiveQ = q ?? (kind === "Gift card" ? "gift card" : undefined);
 
   // Push platform + search down to Kinguin so a filtered landing (e.g. a
   // platform tile) comes back stocked instead of empty. Pull a wide page so
   // the client-side filters have enough to work with.
-  const { games } = await getCatalog({ limit: 96, platform, q });
+  const { games } = await getCatalog({ limit: 96, platform, q: effectiveQ });
+
+  // Never pre-select a filter that would empty the page: if the returned pool
+  // has nothing of this kind, land unfiltered rather than on "no results".
+  const kindMatches = kind ? games.some((g) => g.kind === kind) : false;
+  const initialKind = kindMatches ? kind : undefined;
 
   const heading = q
     ? `“${q}”`
     : deals
       ? "Best-price keys"
-      : kind
-        ? `${kind}s`
-        : platform
-          ? `${platform} keys`
-          : "All keys";
+      : sortHeading
+        ? sortHeading
+        : kind
+          ? `${kind}s`
+          : genre
+            ? `${genre} keys`
+            : platform
+              ? `${platform} keys`
+              : "All keys";
+
+  // Re-key on the active facets so navigating between tabs (e.g. Steam → Epic,
+  // New releases → Top charts) remounts the browser with fresh filter state,
+  // instead of leaving the previous tab's selection stuck in place.
+  const browserKey = `${platform ?? ""}|${genre ?? ""}|${kind ?? ""}|${sp.sort ?? ""}|${deals}|${q ?? ""}`;
 
   return (
     <div className="mx-auto max-w-[1500px] px-4 py-8 md:px-6 md:py-10">
@@ -60,7 +92,15 @@ export default async function CatalogPage({
           try again in a minute.
         </p>
       ) : (
-        <CatalogBrowser games={games} initialPlatform={platform} initialKind={kind} deals={deals} />
+        <CatalogBrowser
+          key={browserKey}
+          games={games}
+          initialPlatform={platform}
+          initialGenre={genre}
+          initialKind={initialKind}
+          initialSort={sort}
+          deals={deals}
+        />
       )}
     </div>
   );

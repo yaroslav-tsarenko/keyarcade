@@ -136,7 +136,7 @@ export function CheckoutForm() {
         <section>
           <h2 className="text-2xl text-ink">2 · Payment</h2>
           <p className="mt-2 text-sm font-semibold text-ink-muted">
-            Secure card payment. We accept Visa and Mastercard with PCI DSS compliant processing.
+            Secure card payment. We accept Visa and Mastercard.
           </p>
           <PaymentMarks className="mt-3" />
           <div className="mt-4 grid max-w-lg gap-3 sm:grid-cols-2">

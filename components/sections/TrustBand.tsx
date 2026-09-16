@@ -41,7 +41,7 @@ export function TrustBand({
         <div className="mt-6 flex flex-wrap items-center justify-center gap-4">
           <PaymentMarks />
           <span className="text-sm text-ink-muted">
-            PCI DSS compliant processing · {POLICY.deliveryTime}
+            Secure card checkout · {POLICY.deliveryTime}
           </span>
         </div>
       </div>

@@ -153,7 +153,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
                   <Clock width={15} height={15} className="text-signal" aria-hidden /> Delivered in a minute
                 </li>
                 <li className="inline-flex items-center gap-2">
-                  <ShieldCheck width={15} height={15} className="text-signal" aria-hidden /> Official distributors
+                  <ShieldCheck width={15} height={15} className="text-signal" aria-hidden /> Original keys
                 </li>
               </ul>
             </div>

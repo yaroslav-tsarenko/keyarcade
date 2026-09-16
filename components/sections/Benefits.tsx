@@ -5,12 +5,12 @@ import { POLICY } from "@/lib/site-config";
 const BENEFITS = [
   {
     icon: BadgeCheck,
-    title: "Sourced from official distributors",
-    body: "Every code comes through authorised distribution, is sold once, and leaves stock the moment it is yours.",
+    title: "Original keys, sold once",
+    body: "Every code is sold a single time and leaves stock the moment it is yours — no shared or re-sold keys.",
   },
   {
     icon: RefreshCw,
-    title: `${POLICY.refundDays}-day refunds on unredeemed keys`,
+    title: `${POLICY.refundDays}-day refunds on unused keys`,
     body: "Changed your mind before revealing the code? Send it back. Once a key is revealed it cannot be un-sold.",
   },
   {

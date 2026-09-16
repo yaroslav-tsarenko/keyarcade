@@ -25,19 +25,26 @@ const COLUMNS = [
     links: [
       { label: "Help centre", href: "/faq" },
       { label: "Activation guides", href: "/faq#activation" },
-      { label: "Delivery", href: "/legal/delivery" },
-      { label: "Refunds", href: "/legal/refunds" },
-      { label: "Complaints", href: "/legal/complaints" },
       { label: "Contact us", href: "/contact" },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About the store", href: "/faq#about" },
-      { label: "Acceptable use", href: "/legal/acceptable-use" },
+      { label: "About the store", href: "/about" },
       { label: "Accessibility", href: "/legal/accessibility" },
-      { label: "All policies", href: "/legal/terms" },
+    ],
+  },
+  {
+    title: "Policies",
+    links: [
+      { label: "Terms & conditions", href: "/legal/terms" },
+      { label: "Privacy", href: "/legal/privacy" },
+      { label: "Cookies", href: "/legal/cookies" },
+      { label: "Refunds", href: "/legal/refunds" },
+      { label: "Delivery", href: "/legal/delivery" },
+      { label: "Complaints", href: "/legal/complaints" },
+      { label: "Acceptable use", href: "/legal/acceptable-use" },
     ],
   },
 ];
@@ -57,7 +64,7 @@ export function Footer() {
         <div>
           <Logo />
           <p className="mt-4 max-w-sm text-pretty text-ink-muted">
-            {SITE.tagline} Verified codes for Steam, Epic, Xbox, PlayStation,
+            {SITE.tagline} Original codes for Steam, Epic, Xbox, PlayStation,
             Nintendo and GOG — delivered by email the minute you pay.
           </p>
         </div>
@@ -71,7 +78,7 @@ export function Footer() {
       </div>
 
       {/* Tier 2 — the map of the store */}
-      <div className="mx-auto grid max-w-[1500px] gap-1 px-4 py-8 md:grid-cols-4 md:gap-8 md:px-6 md:py-12">
+      <div className="mx-auto grid max-w-[1500px] gap-1 px-4 py-8 md:grid-cols-3 md:gap-8 md:px-6 md:py-12 lg:grid-cols-5">
         {COLUMNS.map((col) => (
           <FooterColumn key={col.title} title={col.title} links={col.links} />
         ))}
@@ -86,7 +93,7 @@ export function Footer() {
         <PaymentMarks />
         <p className="inline-flex items-center gap-2 text-sm text-ink-muted">
           <ShieldCheck width={16} height={16} className="text-stock" aria-hidden />
-          Secure checkout · Keys sourced from official distributors
+          Secure checkout · Original keys, instant delivery
         </p>
       </div>
 

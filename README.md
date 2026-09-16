@@ -77,7 +77,7 @@ All secrets live in `.env.local` (never committed). Keys:
 ## Payments & currency
 
 Prices are quoted in EUR (Kinguin's base) and converted client-side to GBP/USD
-via the header switcher. Visa/Mastercard and PCI DSS marks render from
+via the header switcher. Visa/Mastercard marks render from
 `public/payments/`. COMPANY NAME OÜ is the Merchant of Record.
 
 ## Design tokens

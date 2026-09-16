@@ -14,12 +14,20 @@ export function GenreExplorer({ games, genres }: { games: Game[]; genres: string
   const [genre, setGenre] = useState<string | null>(null);
   const [tint, setTint] = useState<string | null>(null);
 
+  // Only offer a chip for a genre that actually has games in this grid — the
+  // parent may pass a broader genre list than the sampled game pool covers, and
+  // an empty chip (Racing, Indie, Sim…) reads as a dead filter.
+  const available = useMemo(() => {
+    const present = new Set(games.map((g) => g.genre));
+    return genres.filter((g) => present.has(g as Game["genre"]));
+  }, [games, genres]);
+
   const shown = useMemo(
     () => (genre ? games.filter((g) => g.genre === genre) : games).slice(0, 10),
     [games, genre],
   );
 
-  if (games.length === 0 || genres.length === 0) return null;
+  if (games.length === 0 || available.length === 0) return null;
 
   return (
     <section className="border-y border-edge bg-deck-band py-12 md:py-14">
@@ -34,7 +42,7 @@ export function GenreExplorer({ games, genres }: { games: Game[]; genres: string
           <GenreChip active={genre === null} onClick={() => setGenre(null)}>
             Everything
           </GenreChip>
-          {genres.map((g) => (
+          {available.map((g) => (
             <GenreChip key={g} active={genre === g} onClick={() => setGenre(g)}>
               {g}
             </GenreChip>

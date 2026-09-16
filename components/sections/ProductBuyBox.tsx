@@ -90,7 +90,7 @@ export function ProductBuyBox({ game }: { game: Game }) {
 
       <p className="mt-5 flex items-center gap-2 border-t border-edge pt-4 text-xs font-semibold text-ink-muted">
         <ShieldCheck width={16} height={16} strokeWidth={2.5} className="text-stock" />
-        Every key verified before it ships. Bad code? We replace or refund it.
+        Original keys, sold once. Bad code? We replace or refund it.
       </p>
     </div>
   );

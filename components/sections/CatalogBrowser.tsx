@@ -8,7 +8,7 @@ import { ProductCard } from "@/components/ui/ProductCard";
 import { useCurrency } from "@/components/ui/CurrencyProvider";
 
 const SORTS = ["Featured", "Price: low to high", "Price: high to low", "Newest"] as const;
-type Sort = (typeof SORTS)[number];
+export type Sort = (typeof SORTS)[number];
 const STEP = 12;
 
 function toggle<T>(set: Set<T>, value: T): Set<T> {
@@ -139,12 +139,16 @@ function Filters({
 export function CatalogBrowser({
   games,
   initialPlatform,
+  initialGenre,
   initialKind,
+  initialSort,
   deals = false,
 }: {
   games: Game[];
   initialPlatform?: Platform;
+  initialGenre?: Genre;
   initialKind?: ProductKind;
+  initialSort?: Sort;
   deals?: boolean;
 }) {
   const maxAvailable = useMemo(
@@ -176,12 +180,12 @@ export function CatalogBrowser({
 
   const [state, setState] = useState<FilterState>({
     platforms: new Set(initialPlatform ? [initialPlatform] : []),
-    genres: new Set(),
+    genres: new Set(initialGenre ? [initialGenre] : []),
     regions: new Set(),
     kinds: new Set(initialKind ? [initialKind] : []),
     maxPrice: maxAvailable,
   });
-  const [sort, setSort] = useState<Sort>(deals ? "Price: low to high" : "Featured");
+  const [sort, setSort] = useState<Sort>(initialSort ?? (deals ? "Price: low to high" : "Featured"));
   const [visible, setVisible] = useState(STEP);
   const [sheet, setSheet] = useState(false);
 

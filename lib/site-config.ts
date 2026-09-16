@@ -30,7 +30,7 @@ export const POLICY = {
   supportHours: "Mon–Fri, 09:00–18:00 (EET)",
   deliveryTime: "Instant — under a minute for in-stock keys",
   serviceFeePct: 0,
-  warranty: "Every key is verified and replaced or refunded if it fails to activate",
+  warranty: "Every key is replaced or refunded if it fails to activate",
 } as const;
 
 export type CurrencyCode = "GBP" | "EUR" | "USD";

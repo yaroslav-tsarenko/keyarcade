@@ -16,6 +16,7 @@ export const NAV_TABS: NavTab[] = [
   { label: "Pre-orders", href: "/catalog?kind=Pre-order" },
   { label: "Top charts", href: "/catalog?sort=top" },
   { label: "Gift cards", href: "/catalog?kind=Gift%20card" },
+  { label: "Support", href: "/faq" },
 ];
 
 export const PLATFORM_LINKS = PLATFORMS.map((p) => ({

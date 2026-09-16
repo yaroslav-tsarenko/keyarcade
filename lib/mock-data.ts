@@ -8,7 +8,11 @@ export type Platform =
   | "Xbox"
   | "PlayStation"
   | "Nintendo"
-  | "GOG";
+  | "GOG"
+  | "Ubisoft Connect"
+  | "EA App"
+  | "Battle.net"
+  | "Rockstar";
 
 export type Region = "Global" | "EU" | "NA" | "UK" | "CIS";
 
@@ -52,6 +56,10 @@ export const PLATFORMS: Platform[] = [
   "PlayStation",
   "Nintendo",
   "GOG",
+  "Ubisoft Connect",
+  "EA App",
+  "Battle.net",
+  "Rockstar",
 ];
 
 export const GENRES: Genre[] = [
@@ -529,7 +537,7 @@ export const FAQ: FaqItem[] = [
   },
   {
     q: "Which payment methods work?",
-    a: "Visa and Mastercard at checkout, with PCI DSS compliant processing. You'll see the full list before you place the order.",
+    a: "Visa and Mastercard at checkout. You'll see the full list before you place the order.",
   },
   {
     q: "Can I get a refund?",

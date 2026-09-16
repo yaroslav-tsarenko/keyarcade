@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     template: `%s — ${SITE.name}`,
   },
   description:
-    "Buy digital game keys for Steam, Epic, Xbox, PlayStation, Nintendo and GOG — verified codes delivered to your inbox in a minute.",
+    "Buy digital game keys for Steam, Epic, Xbox, PlayStation, Nintendo and GOG — original codes delivered to your inbox in a minute.",
   icons: { icon: "/icon.svg" },
 };
 

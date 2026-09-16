@@ -25,7 +25,30 @@ const MAX_RETAIL_EUR = 150;
 // back to the local curated catalog whenever the API is unavailable, so the
 // storefront always has stock to show.
 
-const PLATFORMS: Platform[] = ["Steam", "Epic", "Xbox", "PlayStation", "Nintendo", "GOG"];
+// Kinguin's raw platform strings ("Uplay", "Origin", "Xbox Live", "GOG.com"…)
+// don't match our labels verbatim, and several launchers aren't Steam at all.
+// Map each known launcher onto the right label so e.g. a Ubisoft Connect title
+// is never mislabelled "Steam" — a mismatch that drives refund claims.
+const PLATFORM_SYNONYMS: [string, Platform][] = [
+  ["playstation", "PlayStation"],
+  ["psn", "PlayStation"],
+  ["xbox", "Xbox"],
+  ["nintendo", "Nintendo"],
+  ["switch", "Nintendo"],
+  ["ubisoft", "Ubisoft Connect"],
+  ["uplay", "Ubisoft Connect"],
+  ["ea app", "EA App"],
+  ["ea play", "EA App"],
+  ["origin", "EA App"],
+  ["battle.net", "Battle.net"],
+  ["battlenet", "Battle.net"],
+  ["blizzard", "Battle.net"],
+  ["rockstar", "Rockstar"],
+  ["social club", "Rockstar"],
+  ["gog", "GOG"],
+  ["epic", "Epic"],
+  ["steam", "Steam"],
+];
 const HUES: [string, string][] = [
   ["#b8300f", "#ffb800"],
   ["#5b2a86", "#d1417a"],
@@ -41,8 +64,11 @@ function hash(s: string): number {
 }
 
 function mapPlatform(raw: string): Platform {
-  const found = PLATFORMS.find((p) => raw.toLowerCase().includes(p.toLowerCase()));
-  return found ?? "Steam";
+  const r = raw.toLowerCase();
+  for (const [needle, platform] of PLATFORM_SYNONYMS) {
+    if (r.includes(needle)) return platform;
+  }
+  return "Steam";
 }
 
 function mapRegion(raw: string): Region {
@@ -116,6 +142,7 @@ function toGame(p: KinguinProduct): Game {
 // tile) come back populated instead of empty.
 export interface CatalogQuery {
   limit?: number;
+  page?: number;
   platform?: string;
   q?: string;
 }
@@ -133,20 +160,23 @@ const KINGUIN_PLATFORM: Record<string, string> = {
 
 export async function getCatalog(
   opts: CatalogQuery | number = {},
-): Promise<{ games: Game[]; live: boolean }> {
-  const { limit = 48, platform, q } = typeof opts === "number" ? { limit: opts } : opts;
-  if (!isKinguinConfigured()) return { games: [], live: false };
+): Promise<{ games: Game[]; live: boolean; total: number }> {
+  const { limit = 48, page: pageNo = 1, platform, q } =
+    typeof opts === "number" ? { limit: opts } : opts;
+  if (!isKinguinConfigured()) return { games: [], live: false, total: 0 };
   try {
     const kinguinPlatform = platform ? (KINGUIN_PLATFORM[platform] ?? platform) : undefined;
-    const page = await listProducts({ limit, platform: kinguinPlatform, name: q });
+    const page = await listProducts({ limit, page: pageNo, platform: kinguinPlatform, name: q });
     const games = page.items
       .filter((i) => i.priceEur > 0 && i.qty > 0)
       .map(toGame)
       .filter((g) => g.price <= MAX_RETAIL_EUR);
-    return { games, live: true };
+    // `total` is Kinguin's full match count for this query — the real size of
+    // the live catalogue, not just the page we pulled.
+    return { games, live: true, total: page.total };
   } catch (e) {
     console.error("Kinguin catalog fetch failed:", e);
-    return { games: [], live: false };
+    return { games: [], live: false, total: 0 };
   }
 }
 
@@ -186,6 +216,8 @@ export interface HomeData {
   byPlatform: { platform: string; games: Game[] }[];
   genres: string[];
   ticker: string[];
+  /** Full size of the live catalogue (Kinguin match count), for the trust band. */
+  keysLive: number;
 }
 
 const EMPTY_HOME: HomeData = {
@@ -198,14 +230,33 @@ const EMPTY_HOME: HomeData = {
   byPlatform: [],
   genres: [],
   ticker: [],
+  keysLive: 0,
 };
 
 /** How many rows the hero queue holds. Enough to be worth scrolling, few
  *  enough that the whole list is still one glance per row. */
 const STAGE_MAX = 14;
 
+/** How many pages of live products to pull for the home pool. A wider pool
+ *  means the rails stop repeating the same handful of titles and the smaller
+ *  storefronts (Xbox, GOG…) have enough stock to fill a carousel. */
+const HOME_PAGES = 3;
+const HOME_PAGE_SIZE = 100;
+
 export async function getHomeData(): Promise<HomeData> {
-  const { games } = await getCatalog(80);
+  // Pull several pages in parallel and merge into one de-duplicated pool.
+  const pages = await Promise.all(
+    Array.from({ length: HOME_PAGES }, (_, i) =>
+      getCatalog({ limit: HOME_PAGE_SIZE, page: i + 1 }),
+    ),
+  );
+  const bySlug = new Map<string, Game>();
+  for (const p of pages) for (const g of p.games) if (!bySlug.has(g.slug)) bySlug.set(g.slug, g);
+  const games = [...bySlug.values()];
+  // The headline number is the true catalogue size, not how many keys happen
+  // to be on show in the rails below.
+  const total = Math.max(pages[0]?.total ?? 0, games.length);
+
   const withImg = games.filter((g) => g.image);
   const pool = withImg.length >= 12 ? withImg : games;
   if (pool.length === 0) return EMPTY_HOME;
@@ -253,18 +304,31 @@ export async function getHomeData(): Promise<HomeData> {
 
   const stage = [...curated, ...tail];
 
-  const cheapest = [...rest].sort((a, b) => a.price - b.price);
-  const underTenPool = rest.filter((g) => g.price < 10);
-  const underTen = (underTenPool.length >= 6 ? underTenPool : cheapest).slice(0, 12);
+  // The category rails are handed *disjoint* slices of the pool so the store
+  // stops showing the same handful of keys under every heading. Each rail keeps
+  // its own character: cheap under €10, newest fresh, the pricier remainder as
+  // the "chart". `used` already holds every key on the hero stage.
+  const notUsed = (g: Game) => !used.has(g.slug);
 
-  // Top charts ranks on the two signals the catalogue actually carries.
-  const topCharts = [...pool]
-    .sort((a, b) => b.rating * Math.log10(b.reviews + 10) - a.rating * Math.log10(a.reviews + 10))
-    .slice(0, 10);
+  const cheap = rest.filter((g) => notUsed(g) && g.price < 10);
+  const cheapest = rest.filter(notUsed).sort((a, b) => a.price - b.price);
+  const underTen = (cheap.length >= 6 ? cheap.sort((a, b) => a.price - b.price) : cheapest).slice(0, 12);
+  underTen.forEach((g) => used.add(g.slug));
 
+  const freshRail = rest.filter(notUsed).sort((a, b) => b.releaseYear - a.releaseYear).slice(0, 12);
+  freshRail.forEach((g) => used.add(g.slug));
+
+  // Rating/reviews aren't carried by the live feed, so the "chart" leads with
+  // the pricier AAA remainder — a distinct set from the cheap and fresh rails.
+  const topCharts = rest.filter(notUsed).sort((a, b) => b.price - a.price).slice(0, 10);
+  topCharts.forEach((g) => used.add(g.slug));
+
+  // Platform rows draw from the whole pool (a key belongs to exactly one
+  // storefront, so these never overlap each other) and now have a much larger
+  // pool to fill from, so smaller stores like Xbox reach a full carousel.
   const byPlatform = ALL_PLATFORMS.map((platform) => ({
     platform,
-    games: rest.filter((g) => g.platform === platform).slice(0, 12),
+    games: pool.filter((g) => g.platform === platform).slice(0, 12),
   })).filter((row) => row.games.length >= 4);
 
   const genres = GENRES.filter((genre) => pool.some((g) => g.genre === genre));
@@ -278,11 +342,12 @@ export async function getHomeData(): Promise<HomeData> {
     stage,
     deals: deals.slice(0, 12),
     topCharts,
-    fresh: fresh.slice(0, 12),
+    fresh: freshRail,
     preorders: preorders.slice(0, 12),
     underTen,
     byPlatform,
     genres,
     ticker,
+    keysLive: total,
   };
 }

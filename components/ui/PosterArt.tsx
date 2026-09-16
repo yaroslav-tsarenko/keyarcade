@@ -35,6 +35,10 @@ export function PosterArt({
   const [base, accent] = game.hue;
 
   if (game.image) {
+    // Kinguin covers come in mixed aspect ratios; `object-cover` was slicing
+    // the top and bottom off most of them. Show the whole artwork with
+    // `object-contain`, and fill the leftover space with a blurred, scaled
+    // copy of the same image so the tile still reads as full-bleed.
     return (
       <div
         className={cx("relative overflow-hidden", className)}
@@ -45,9 +49,17 @@ export function PosterArt({
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={game.image}
+          alt=""
+          aria-hidden
+          loading="lazy"
+          className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-xl"
+        />
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={game.image}
           alt={`${game.title} cover art`}
           loading="lazy"
-          className="h-full w-full object-cover"
+          className="relative h-full w-full object-contain"
         />
       </div>
     );

@@ -14,6 +14,10 @@ const PLATFORM_TINT: Record<string, string> = {
   PlayStation: "#0070d1",
   Nintendo: "#e60012",
   GOG: "#7b5cf0",
+  "Ubisoft Connect": "#0a58ca",
+  "EA App": "#ea4b1f",
+  "Battle.net": "#1275d1",
+  Rockstar: "#f2a900",
 };
 
 export function PlatformShowcase({

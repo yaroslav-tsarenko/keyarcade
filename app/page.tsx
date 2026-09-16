@@ -30,15 +30,8 @@ export default async function Home() {
     byPlatform,
     genres,
     ticker,
+    keysLive,
   } = home;
-
-  // Every rail is a view of one fetched pool; this is how many distinct keys
-  // that pool holds, which is the only "statistic" the trust band claims.
-  const keysLive = new Set(
-    [stage.map((s) => s.game), deals, topCharts, fresh, preorders, underTen]
-      .flat()
-      .map((g) => g.slug),
-  ).size;
 
   if (stage.length === 0) {
     return (
@@ -62,7 +55,7 @@ export default async function Home() {
         <ReleaseTabs fresh={fresh} preorders={preorders} />
       </div>
 
-      <GenreExplorer games={[...deals, ...fresh, ...underTen]} genres={genres} />
+      <GenreExplorer games={[...fresh, ...underTen, ...topCharts, ...deals]} genres={genres} />
 
       <div className="space-y-14 py-12 md:space-y-16 md:py-14">
         <RailSection kicker="Under €10" title="Cheap and worth it" games={underTen} href="/catalog" />

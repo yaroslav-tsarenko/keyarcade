@@ -54,8 +54,8 @@ export function ProductTabs({ game }: { game: Game }) {
             </p>
             <p>
               This listing is a demo. In a live store this space holds the publisher&apos;s
-              description, screenshots and trailer. The key you buy here is delivered instantly and
-              verified before it ships — no shared accounts, no re-sold codes.
+              description, screenshots and trailer. The key you buy here is delivered instantly —
+              an original code, sold once, no shared accounts.
             </p>
             <ul className="grid gap-2 sm:grid-cols-2">
               {["Single-player campaign", "Cloud saves", "Controller support", "Steam achievements"].map((f) => (

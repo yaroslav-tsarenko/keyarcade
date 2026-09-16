@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { MessageCircle, Mail, Clock } from "lucide-react";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { ButtonLink } from "@/components/ui/Button";
+import { ACTIVATION_STEPS } from "@/lib/mock-data";
 
 export const metadata: Metadata = {
   title: "Support & FAQ",
@@ -51,6 +52,28 @@ export default function FaqPage() {
           </div>
         </aside>
       </div>
+
+      <section id="activation" className="mt-14 scroll-mt-28">
+        <span className="eyebrow inline-block">Activation guide</span>
+        <h2 className="mt-2 text-rail text-ink">Redeem your key</h2>
+        <p className="mt-2 max-w-xl font-semibold text-ink-muted">
+          The same four steps work for Steam, Epic, Xbox, PlayStation, Nintendo and
+          GOG — open the matching launcher and follow along.
+        </p>
+        <ol className="mt-6 grid gap-3 sm:grid-cols-2">
+          {ACTIVATION_STEPS.map((step, i) => (
+            <li
+              key={step}
+              className="flex gap-3 rounded-tile border border-edge bg-[var(--glass)] p-4 lift-md"
+            >
+              <span className="tnum grid h-8 w-8 shrink-0 place-items-center rounded-control bg-signal font-display text-sm font-extrabold text-on-signal">
+                {i + 1}
+              </span>
+              <p className="text-[15px] leading-relaxed text-ink">{step}</p>
+            </li>
+          ))}
+        </ol>
+      </section>
     </div>
   );
 }

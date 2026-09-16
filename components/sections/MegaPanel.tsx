@@ -9,7 +9,6 @@ import { PosterArt } from "@/components/ui/PosterArt";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { PriceSticker } from "@/components/ui/PriceSticker";
 import { Badge } from "@/components/ui/Badge";
-import { SUPPORT_LINKS } from "@/lib/nav";
 import { cx } from "@/lib/cx";
 
 interface Featured {
@@ -64,7 +63,7 @@ export function MegaPanel({
       className="glass-panel absolute inset-x-0 top-full border-x-0 border-b border-t-0 shadow-none"
       onMouseLeave={onClose}
     >
-      <div className="mx-auto grid max-w-[1500px] gap-8 px-4 py-7 md:px-6 lg:grid-cols-[1.25fr_0.75fr_0.9fr]">
+      <div className="mx-auto grid max-w-[1500px] gap-8 px-4 py-7 md:px-6 lg:grid-cols-[1.5fr_0.9fr]">
         <div className="min-w-0">
           <p className="eyebrow mb-3">{kind === "platforms" ? "Platforms" : "Genres"}</p>
           <ul className="grid max-w-md grid-cols-2 gap-1">
@@ -101,22 +100,6 @@ export function MegaPanel({
               </ul>
             </>
           ) : null}
-        </div>
-
-        <div className="min-w-0">
-          <p className="eyebrow mb-3">Support</p>
-          <ul className="space-y-0.5">
-            {SUPPORT_LINKS.map((l) => (
-              <li key={l.href + l.label}>
-                <Link
-                  href={l.href}
-                  className="ring-focus ring-focus-flat block rounded-control px-3 py-2 text-sm text-ink-muted transition-colors hover:bg-chip hover:text-ink"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
 
         <div className="min-w-0">
