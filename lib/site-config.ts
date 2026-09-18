@@ -15,13 +15,15 @@ export const SITE = {
 // Placeholders until the legal entity exists. Never invent registration
 // details — every one of these is shown to customers as a legal fact.
 export const COMPANY = {
-  legalName: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "COMPANY NAME OÜ",
-  regNumber: process.env.NEXT_PUBLIC_COMPANY_NUMBER ?? "COMPANY NUMBER",
-  address: process.env.NEXT_PUBLIC_COMPANY_ADDRESS ?? "COMPANY ADDRESS",
-  country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY ?? "COMPANY COUNTRY",
+  legalName: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "SENODATE OÜ",
+  regNumber: process.env.NEXT_PUBLIC_COMPANY_NUMBER ?? "17594191",
+  address:
+    process.env.NEXT_PUBLIC_COMPANY_ADDRESS ??
+    "Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415",
+  country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY ?? "Estonia",
   email: process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "support@keyarcade.com",
   // Merchant of Record shown at checkout
-  merchantOfRecord: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "COMPANY NAME OÜ",
+  merchantOfRecord: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "SENODATE OÜ",
 } as const;
 
 // Consistent policy values — referenced by legal pages, FAQ, checkout, footer
