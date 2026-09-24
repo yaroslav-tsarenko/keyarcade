@@ -29,7 +29,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "1. About Us",
         body: [
-          "The website and the Products offered through it are operated and sold by COMPANY NAME OÜ, registration number COMPANY NUMBER, registered at COMPANY ADDRESS. Contact: support@keyarcade.com.",
+          "The website and the Products offered through it are operated and sold by COMPANY NAME OÜ, registration number COMPANY NUMBER, registered at COMPANY ADDRESS. Contact: info@keyarcade.com.",
           "COMPANY NAME OÜ acts as the seller. Product information and availability may be obtained through third-party catalogue and distribution systems, but the purchase contract is concluded with COMPANY NAME OÜ unless expressly stated otherwise.",
         ],
       },
@@ -131,7 +131,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "12. Digital Delivery",
         body: [
           "Products are supplied digitally. Following successful payment and any required security review, the Product Code will normally be displayed in the Customer’s Account and sent to the email address provided for the Order.",
-          "You are responsible for entering an accurate email address and maintaining access to it. If the email is not visible, check spam, junk and promotions folders, verify the Account email, review the Order page and contact support@keyarcade.com if the code remains unavailable.",
+          "You are responsible for entering an accurate email address and maintaining access to it. If the email is not visible, check spam, junk and promotions folders, verify the Account email, review the Order page and contact info@keyarcade.com if the code remains unavailable.",
           "Delivery may be delayed by payment verification, security review, technical issues or temporary catalogue availability. No exact delivery time is guaranteed unless expressly stated during checkout.",
         ],
       },
@@ -170,7 +170,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "17. Chargebacks and Payment Disputes",
         body: [
-          "Before initiating a chargeback, contact support@keyarcade.com so that we have a reasonable opportunity to investigate and resolve the issue.",
+          "Before initiating a chargeback, contact info@keyarcade.com so that we have a reasonable opportunity to investigate and resolve the issue.",
           "You must not falsely claim that a legitimately authorised and properly delivered Order was unauthorised, undelivered or defective. Where a chargeback is opened, we may provide the relevant financial institution with reasonably necessary Order, delivery, Account, communication and security records in accordance with the Privacy Policy.",
           "We may proportionately restrict further purchases while a dispute remains unresolved. This does not prevent legitimate consumer or payment rights.",
         ],
@@ -218,7 +218,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "22. Complaints and Consumer Disputes",
         body: [
-          "Complaints should be sent to support@keyarcade.com with the Order number, the email used for the Order, a clear description and relevant evidence. For consumer complaints governed by Estonian law, we aim to provide a written response no later than 15 days after receipt.",
+          "Complaints should be sent to info@keyarcade.com with the Order number, the email used for the Order, a clear description and relevant evidence. For consumer complaints governed by Estonian law, we aim to provide a written response no later than 15 days after receipt.",
           "If a dispute between an Estonian consumer and COMPANY NAME cannot be resolved directly, the consumer may be entitled to apply to the Estonian Consumer Disputes Committee, Endla 10A, 10122 Tallinn, Estonia, at https://ttja.ee/en/consumer-disputes-committee. Nothing prevents recourse to a competent court.",
         ],
       },
@@ -234,7 +234,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "We may update these Terms to reflect changes in law, Products, payment methods, security or Website functions. The version presented when an Order was submitted generally governs that Order; updates will not retroactively remove established rights.",
           "If a provision is unlawful or unenforceable, it will be limited to the minimum necessary and the remainder will continue. Failure to enforce a provision is not a waiver.",
-          "Contact: COMPANY NAME OÜ, registration number COMPANY NUMBER, COMPANY ADDRESS; support@keyarcade.com; https://www.keyarcade.com.",
+          "Contact: COMPANY NAME OÜ, registration number COMPANY NUMBER, COMPANY ADDRESS; info@keyarcade.com; https://www.keyarcade.com.",
         ],
       },
     ],
@@ -280,7 +280,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "5. Non-Delivery",
         body: [
           "Before reporting non-delivery, check the Order page in your Account and the spam, junk and promotions folders of the email address used for the Order.",
-          "If the Product Code is not available in the Account or by email within a reasonable time, contact support@keyarcade.com. We will investigate delivery and either supply the Product, provide an appropriate alternative with your agreement, or refund the amount due if fulfilment is not possible.",
+          "If the Product Code is not available in the Account or by email within a reasonable time, contact info@keyarcade.com. We will investigate delivery and either supply the Product, provide an appropriate alternative with your agreement, or refund the amount due if fulfilment is not possible.",
         ],
       },
       {
@@ -341,7 +341,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "Contact us before initiating a chargeback so we can investigate. This request does not restrict legitimate payment or consumer rights.",
           "Fraudulent refund claims, altered evidence, false non-delivery statements or knowingly false chargebacks may lead to Account restrictions and may be reported where legally appropriate.",
-          "Submit requests to support@keyarcade.com with the Order number and a concise explanation.",
+          "Submit requests to info@keyarcade.com with the Order number and a concise explanation.",
         ],
       },
     ],
@@ -357,7 +357,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "1. Controller and Contact Details",
         body: [
-          "The controller is COMPANY NAME OÜ, registration number COMPANY NUMBER, COMPANY ADDRESS. Privacy enquiries and rights requests may be sent to support@keyarcade.com.",
+          "The controller is COMPANY NAME OÜ, registration number COMPANY NUMBER, COMPANY ADDRESS. Privacy enquiries and rights requests may be sent to info@keyarcade.com.",
         ],
       },
       {
@@ -489,7 +489,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
               "exercise rights concerning qualifying automated decisions.",
             ],
           },
-          "Send a request to support@keyarcade.com. We may request proportionate information to verify identity and protect the Account.",
+          "Send a request to info@keyarcade.com. We may request proportionate information to verify identity and protect the Account.",
         ],
       },
       {
@@ -514,7 +514,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "15. Complaints",
         body: [
-          "You may first contact support@keyarcade.com so we can address the concern.",
+          "You may first contact info@keyarcade.com so we can address the concern.",
           "You also have the right to lodge a complaint with the Estonian Data Protection Inspectorate or, where applicable, another competent supervisory authority. Estonian Data Protection Inspectorate: Tatari 39, 10134 Tallinn, Estonia; https://www.aki.ee.",
         ],
       },
@@ -543,7 +543,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "2. Who Is Responsible",
         body: [
-          "COMPANY NAME OÜ, registration number COMPANY NUMBER, is responsible for the Website’s use of cookies. Contact: support@keyarcade.com.",
+          "COMPANY NAME OÜ, registration number COMPANY NUMBER, is responsible for the Website’s use of cookies. Contact: info@keyarcade.com.",
         ],
       },
       {
@@ -600,7 +600,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "10. Changes and Contact",
         body: [
           "We may update this Policy when technologies, purposes or legal requirements change. The current version will be published with its last-updated date.",
-          "Questions may be sent to COMPANY NAME OÜ at support@keyarcade.com.",
+          "Questions may be sent to COMPANY NAME OÜ at info@keyarcade.com.",
         ],
       },
     ],
@@ -656,7 +656,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
               "confirm the email address shown in the Account or Order;",
               "review the Order page in the Account;",
               "allow a reasonable period for payment and security processing; and",
-              "contact support@keyarcade.com if the code is still unavailable.",
+              "contact info@keyarcade.com if the code is still unavailable.",
             ],
           },
         ],
@@ -685,7 +685,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "10. Support and Remedies",
         body: [
-          "For delivery issues, contact support@keyarcade.com with the Order number and Account email. Do not send a full card number, security code or Account password.",
+          "For delivery issues, contact info@keyarcade.com with the Order number and Account email. Do not send a full card number, security code or Account password.",
           "Non-delivery remedies are described in the Refund, Cancellation and Withdrawal Policy and mandatory consumer law.",
         ],
       },
@@ -703,7 +703,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "1. Contacting Us First",
         body: [
           "We encourage Customers to contact us promptly so that an issue can be investigated and resolved directly.",
-          "Complaints should be sent to support@keyarcade.com.",
+          "Complaints should be sent to info@keyarcade.com.",
         ],
       },
       {
@@ -867,7 +867,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "10. Reporting and Contact",
         body: [
-          "Suspected Account compromise, payment abuse, unlawful resale or security issues may be reported to support@keyarcade.com. Provide only information relevant to the report and do not transmit passwords or complete card details.",
+          "Suspected Account compromise, payment abuse, unlawful resale or security issues may be reported to info@keyarcade.com. Provide only information relevant to the report and do not transmit passwords or complete card details.",
         ],
       },
     ],
@@ -928,7 +928,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "6. Feedback",
         body: [
-          "Accessibility feedback may be sent to support@keyarcade.com. Please include the page or function involved, the barrier encountered, the device or assistive technology used where you are comfortable providing it, and the preferred way for us to respond.",
+          "Accessibility feedback may be sent to info@keyarcade.com. Please include the page or function involved, the barrier encountered, the device or assistive technology used where you are comfortable providing it, and the preferred way for us to respond.",
           "Do not include passwords, complete payment-card information or other data not needed to investigate the issue.",
         ],
       },

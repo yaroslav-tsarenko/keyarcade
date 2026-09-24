@@ -8,7 +8,7 @@ export const SITE = {
   domain: "keyarcade.com",
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://keyarcade.com",
   tagline: "Your library, one key away.",
-  supportEmail: "support@keyarcade.com",
+  supportEmail: "info@keyarcade.com",
 } as const;
 
 // Legal entity — must match everywhere (footer, /contact, legal pages, checkout)
@@ -21,7 +21,7 @@ export const COMPANY = {
     process.env.NEXT_PUBLIC_COMPANY_ADDRESS ??
     "Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415",
   country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY ?? "Estonia",
-  email: process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "support@keyarcade.com",
+  email: process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "info@keyarcade.com",
   // Merchant of Record shown at checkout
   merchantOfRecord: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "SENODATE OÜ",
 } as const;
