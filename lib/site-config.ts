@@ -11,19 +11,16 @@ export const SITE = {
   supportEmail: "info@keyarcade.com",
 } as const;
 
-// Legal entity — must match everywhere (footer, /contact, legal pages, checkout)
-// Placeholders until the legal entity exists. Never invent registration
-// details — every one of these is shown to customers as a legal fact.
+// Legal entity — must match everywhere (footer, /contact, legal pages, checkout).
+// Hardcoded on purpose so stale env vars can never override the legal facts.
 export const COMPANY = {
-  legalName: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "SENODATE OÜ",
-  regNumber: process.env.NEXT_PUBLIC_COMPANY_NUMBER ?? "17594191",
-  address:
-    process.env.NEXT_PUBLIC_COMPANY_ADDRESS ??
-    "Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415",
-  country: process.env.NEXT_PUBLIC_COMPANY_COUNTRY ?? "Estonia",
-  email: process.env.NEXT_PUBLIC_COMPANY_EMAIL ?? "info@keyarcade.com",
+  legalName: "SENODATE OÜ",
+  regNumber: "17594191",
+  address: "Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415",
+  country: "Estonia",
+  email: "info@keyarcade.com",
   // Merchant of Record shown at checkout
-  merchantOfRecord: process.env.NEXT_PUBLIC_COMPANY_NAME ?? "SENODATE OÜ",
+  merchantOfRecord: "SENODATE OÜ",
 } as const;
 
 // Consistent policy values — referenced by legal pages, FAQ, checkout, footer

@@ -42,7 +42,7 @@ function shell(title: string, body: string): string {
   return `<!doctype html><html><body style="margin:0;background:#ecdcbe;font-family:Arial,Helvetica,sans-serif;color:#191207">
   <div style="max-width:560px;margin:0 auto;padding:24px">
     <div style="background:#191207;color:#fbf4e4;padding:18px 22px;border-radius:6px 6px 0 0">
-      <span style="font-size:22px;font-weight:800;letter-spacing:.5px">COMPANY NAME<span style="color:#e8431e">KEYS</span></span>
+      <span style="font-size:22px;font-weight:800;letter-spacing:.5px">KEY<span style="color:#e8431e">ARCADE</span></span>
     </div>
     <div style="background:#f7ecd4;padding:26px 22px;border-radius:0 0 6px 6px;border:1px solid #e0cba3">
       <h1 style="margin:0 0 14px;font-size:20px">${title}</h1>

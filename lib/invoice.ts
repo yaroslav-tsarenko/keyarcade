@@ -23,7 +23,7 @@ export function buildInvoice(data: InvoiceData): Promise<Buffer> {
     const money = (eur: number) => formatMoney(eur, data.currency);
 
     // Header
-    doc.fillColor("#191207").fontSize(24).text("COMPANY NAME KEYS", { continued: false });
+    doc.fillColor("#191207").fontSize(24).text("KEYARCADE", { continued: false });
     doc.fontSize(10).fillColor("#3a2f1e").text(SITE.url);
     doc.moveDown();
 
