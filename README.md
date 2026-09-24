@@ -1,7 +1,7 @@
 # Keyarcade — digital game-key storefront
 
 A working digital game-key shop for **keyarcade.com**, operated by
-**SENODATE OÜ** (Estonia). Live product data comes from the Kinguin ESA
+**PRENKORO OÜ** (Estonia). Live product data comes from the Kinguin ESA
 Integration API; accounts, orders, transactional email and PDF invoices are
 fully wired. When the Kinguin API is unreachable the storefront falls back to a
 curated local catalog so it always has stock to show.
@@ -78,7 +78,7 @@ All secrets live in `.env.local` (never committed). Keys:
 
 Prices are quoted in EUR (Kinguin's base) and converted client-side to GBP/USD
 via the header switcher. Visa/Mastercard marks render from
-`public/payments/`. SENODATE OÜ is the Merchant of Record.
+`public/payments/`. PRENKORO OÜ is the Merchant of Record.
 
 ## Design tokens
 

@@ -14,13 +14,13 @@ export const SITE = {
 // Legal entity — must match everywhere (footer, /contact, legal pages, checkout).
 // Hardcoded on purpose so stale env vars can never override the legal facts.
 export const COMPANY = {
-  legalName: "SENODATE OÜ",
-  regNumber: "17594191",
-  address: "Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415",
+  legalName: "PRENKORO OÜ",
+  regNumber: "17555038",
+  address: "Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145",
   country: "Estonia",
   email: "info@keyarcade.com",
   // Merchant of Record shown at checkout
-  merchantOfRecord: "SENODATE OÜ",
+  merchantOfRecord: "PRENKORO OÜ",
 } as const;
 
 // Consistent policy values — referenced by legal pages, FAQ, checkout, footer

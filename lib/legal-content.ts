@@ -24,13 +24,13 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
     title: "Terms and Conditions",
     updated: UPDATED,
     intro:
-      "These Terms and Conditions govern access to keyarcade.com and purchases of game keys, software activation codes, subscription codes, gift cards, wallet top-ups and other digital products supplied by SENODATE OÜ.",
+      "These Terms and Conditions govern access to keyarcade.com and purchases of game keys, software activation codes, subscription codes, gift cards, wallet top-ups and other digital products supplied by PRENKORO OÜ.",
     sections: [
       {
         heading: "1. About Us",
         body: [
-          "The website and the Products offered through it are operated and sold by SENODATE OÜ, registration number 17594191, registered at Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415, Estonia. Contact: info@keyarcade.com.",
-          "SENODATE OÜ acts as the seller. Product information and availability may be obtained through third-party catalogue and distribution systems, but the purchase contract is concluded with SENODATE OÜ unless expressly stated otherwise.",
+          "The website and the Products offered through it are operated and sold by PRENKORO OÜ, registration number 17555038, registered at Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145, Estonia. Contact: info@keyarcade.com.",
+          "PRENKORO OÜ acts as the seller. Product information and availability may be obtained through third-party catalogue and distribution systems, but the purchase contract is concluded with PRENKORO OÜ unless expressly stated otherwise.",
         ],
       },
       {
@@ -92,7 +92,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "7. Third-Party Platforms and Publisher Terms",
         body: [
           "Activation may require a third-party platform Account and acceptance of the Publisher’s terms, licence agreement, privacy notice, regional rules and technical requirements.",
-          "SENODATE OÜ does not control Publisher platform availability, third-party account suspensions, online servers, future hardware or software changes, or third-party subscription renewal settings. This does not exclude our responsibility to supply a Product Code that conforms to its description and applicable mandatory requirements at the time of supply.",
+          "PRENKORO OÜ does not control Publisher platform availability, third-party account suspensions, online servers, future hardware or software changes, or third-party subscription renewal settings. This does not exclude our responsibility to supply a Product Code that conforms to its description and applicable mandatory requirements at the time of supply.",
         ],
       },
       {
@@ -107,15 +107,15 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "9. Prices, Currencies and Taxes",
         body: [
           "Products may be offered in EUR, GBP and USD. The currency displayed during checkout is the currency in which we request payment.",
-          "Your bank or card issuer may apply its own exchange rate, foreign-transaction charge or cross-border processing fee. These charges are not controlled by SENODATE OÜ.",
-          "The total amount payable to SENODATE OÜ will be displayed before the Order is submitted. SENODATE OÜ is not currently registered for value added tax and does not have a VAT registration number. We will not state a VAT registration number or separately identify an amount as VAT unless our applicable tax status changes. Any charge that we are legally required to collect will be disclosed before submission.",
+          "Your bank or card issuer may apply its own exchange rate, foreign-transaction charge or cross-border processing fee. These charges are not controlled by PRENKORO OÜ.",
+          "The total amount payable to PRENKORO OÜ will be displayed before the Order is submitted. PRENKORO OÜ is not currently registered for value added tax and does not have a VAT registration number. We will not state a VAT registration number or separately identify an amount as VAT unless our applicable tax status changes. Any charge that we are legally required to collect will be disclosed before submission.",
         ],
       },
       {
         heading: "10. Payment",
         body: [
           "Payments may be made using Visa and Mastercard. Availability may depend on country, currency, device, transaction value and security checks.",
-          "Payment is processed through authorised payment service infrastructure. SENODATE OÜ does not normally receive or store the complete card number or card security code processed directly by the payment service provider.",
+          "Payment is processed through authorised payment service infrastructure. PRENKORO OÜ does not normally receive or store the complete card number or card security code processed directly by the payment service provider.",
           "You confirm that you are authorised to use the selected payment method, the billing information is accurate, sufficient funds or credit are available and the payment is not connected with fraud, money laundering, sanctions evasion or other unlawful conduct.",
         ],
       },
@@ -148,15 +148,15 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "After delivery you must keep the Product Code confidential, redeem it only on the correct platform, comply with regional and technical restrictions, follow activation instructions and redeem it before any stated expiry date.",
           "Do not publicly share screenshots, emails or Account pages containing a visible code. Product Codes may be redeemable by any person who obtains them.",
-          "We are not responsible for redemption by another person after secure delivery where disclosure resulted from the Customer sharing the code, losing control of email or Account access, or failing to protect credentials. This does not apply where disclosure resulted from a security failure for which SENODATE OÜ is legally responsible.",
+          "We are not responsible for redemption by another person after secure delivery where disclosure resulted from the Customer sharing the code, losing control of email or Account access, or failing to protect credentials. This does not apply where disclosure resulted from a security failure for which PRENKORO OÜ is legally responsible.",
         ],
       },
       {
         heading: "15. Games, Software, Subscriptions and Stored Value",
         body: [
           "A game or software Product generally grants a limited right to activate or access the relevant content under the Publisher’s licence. Intellectual-property ownership is not transferred.",
-          "Subscription Products provide access for the period, platform and region shown. A Publisher may require an eligible account or payment method and may operate its own renewal settings. Unless clearly disclosed and separately accepted, purchasing from SENODATE OÜ does not authorise SENODATE OÜ to charge you automatically for renewal.",
-          "Gift cards and wallet top-ups are issued for the platform, denomination, currency and region shown. The Publisher operates the third-party wallet or stored-value account; SENODATE OÜ remains responsible for supplying a Product Code conforming to its description.",
+          "Subscription Products provide access for the period, platform and region shown. A Publisher may require an eligible account or payment method and may operate its own renewal settings. Unless clearly disclosed and separately accepted, purchasing from PRENKORO OÜ does not authorise PRENKORO OÜ to charge you automatically for renewal.",
+          "Gift cards and wallet top-ups are issued for the platform, denomination, currency and region shown. The Publisher operates the third-party wallet or stored-value account; PRENKORO OÜ remains responsible for supplying a Product Code conforming to its description.",
         ],
       },
       {
@@ -189,7 +189,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
               "unauthorised commercial resale of Products;",
               "false refund, non-delivery or chargeback claims;",
               "unauthorised access to another Account; or",
-              "infringement of the rights of SENODATE OÜ, a Publisher or another person.",
+              "infringement of the rights of PRENKORO OÜ, a Publisher or another person.",
             ],
           },
         ],
@@ -197,7 +197,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "19. Intellectual Property",
         body: [
-          "The Website’s original text, design, graphics, software, databases and branding are owned by or licensed to SENODATE OÜ and protected by applicable intellectual-property law.",
+          "The Website’s original text, design, graphics, software, databases and branding are owned by or licensed to PRENKORO OÜ and protected by applicable intellectual-property law.",
           "Game titles, software names, platform names, logos, screenshots, artwork and other third-party materials belong to their respective owners. References identify compatible Products and do not imply sponsorship, endorsement or affiliation unless expressly stated.",
         ],
       },
@@ -206,7 +206,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "We aim to keep the Website and Account functions available but cannot guarantee uninterrupted or error-free operation. Access may be temporarily restricted for maintenance, security, legal or technical reasons.",
           "Nothing in these Terms excludes liability for fraud, intentional misconduct, death or personal injury caused by negligence, breach of mandatory consumer rights, failure to supply conforming digital content, or any liability that cannot legally be excluded.",
-          "Subject to mandatory law, SENODATE OÜ is not responsible for loss caused by selecting an accurately described but incorrect platform, region, edition or language; failing disclosed requirements; Customer disclosure of a Product Code; or Publisher action resulting from the Customer’s breach of Publisher terms.",
+          "Subject to mandatory law, PRENKORO OÜ is not responsible for loss caused by selecting an accurately described but incorrect platform, region, edition or language; failing disclosed requirements; Customer disclosure of a Product Code; or Publisher action resulting from the Customer’s breach of Publisher terms.",
         ],
       },
       {
@@ -219,7 +219,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "22. Complaints and Consumer Disputes",
         body: [
           "Complaints should be sent to info@keyarcade.com with the Order number, the email used for the Order, a clear description and relevant evidence. For consumer complaints governed by Estonian law, we aim to provide a written response no later than 15 days after receipt.",
-          "If a dispute between an Estonian consumer and SENODATE OÜ cannot be resolved directly, the consumer may be entitled to apply to the Estonian Consumer Disputes Committee, Endla 10A, 10122 Tallinn, Estonia, at https://ttja.ee/en/consumer-disputes-committee. Nothing prevents recourse to a competent court.",
+          "If a dispute between an Estonian consumer and PRENKORO OÜ cannot be resolved directly, the consumer may be entitled to apply to the Estonian Consumer Disputes Committee, Endla 10A, 10122 Tallinn, Estonia, at https://ttja.ee/en/consumer-disputes-committee. Nothing prevents recourse to a competent court.",
         ],
       },
       {
@@ -234,7 +234,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "We may update these Terms to reflect changes in law, Products, payment methods, security or Website functions. The version presented when an Order was submitted generally governs that Order; updates will not retroactively remove established rights.",
           "If a provision is unlawful or unenforceable, it will be limited to the minimum necessary and the remainder will continue. Failure to enforce a provision is not a waiver.",
-          "Contact: SENODATE OÜ, registration number 17594191, Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415, Estonia; info@keyarcade.com; https://www.keyarcade.com.",
+          "Contact: PRENKORO OÜ, registration number 17555038, Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145, Estonia; info@keyarcade.com; https://www.keyarcade.com.",
         ],
       },
     ],
@@ -250,7 +250,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "1. Scope",
         body: [
-          "This Policy applies to digital Products sold by SENODATE OÜ through keyarcade.com, including games, software, subscriptions, gift cards and wallet top-ups.",
+          "This Policy applies to digital Products sold by PRENKORO OÜ through keyarcade.com, including games, software, subscriptions, gift cards and wallet top-ups.",
           "Mandatory consumer rights take priority over any inconsistent limitation in this Policy.",
         ],
       },
@@ -325,7 +325,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "10. Available Remedies",
         body: [
-          "Depending on applicable law and the circumstances, SENODATE OÜ may provide activation assistance, replacement, correction, a proportionate price reduction, cancellation or refund.",
+          "Depending on applicable law and the circumstances, PRENKORO OÜ may provide activation assistance, replacement, correction, a proportionate price reduction, cancellation or refund.",
           "Where repair or replacement is legally appropriate, it will be provided within a reasonable time and without significant inconvenience. A refund or price reduction will be provided where required, including when conformity cannot be restored, the problem is sufficiently serious or a remedy has failed.",
         ],
       },
@@ -352,12 +352,12 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
     title: "Privacy Policy",
     updated: UPDATED,
     intro:
-      "This Privacy Policy explains how SENODATE OÜ collects, uses, discloses and protects personal data when you use keyarcade.com, create an Account, place an Order or contact support.",
+      "This Privacy Policy explains how PRENKORO OÜ collects, uses, discloses and protects personal data when you use keyarcade.com, create an Account, place an Order or contact support.",
     sections: [
       {
         heading: "1. Controller and Contact Details",
         body: [
-          "The controller is SENODATE OÜ, registration number 17594191, Harju maakond, Tallinn, Kesklinna linnaosa, Pärnu mnt 20, 101415, Estonia. Privacy enquiries and rights requests may be sent to info@keyarcade.com.",
+          "The controller is PRENKORO OÜ, registration number 17555038, Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145, Estonia. Privacy enquiries and rights requests may be sent to info@keyarcade.com.",
         ],
       },
       {
@@ -412,7 +412,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "5. Payments",
         body: [
-          "Card payments are processed through payment service infrastructure. SENODATE OÜ does not normally receive or store the complete payment-card number or card security code.",
+          "Card payments are processed through payment service infrastructure. PRENKORO OÜ does not normally receive or store the complete payment-card number or card security code.",
           "We receive limited transaction information such as payment status, amount, currency, reference, card type or masked details, and risk indicators necessary to administer the Order and prevent fraud.",
         ],
       },
@@ -532,7 +532,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
     title: "Cookie Policy",
     updated: UPDATED,
     intro:
-      "This Cookie Policy explains how SENODATE OÜ uses cookies and similar technologies on keyarcade.com and how visitors can control optional technologies.",
+      "This Cookie Policy explains how PRENKORO OÜ uses cookies and similar technologies on keyarcade.com and how visitors can control optional technologies.",
     sections: [
       {
         heading: "1. What Cookies Are",
@@ -543,7 +543,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "2. Who Is Responsible",
         body: [
-          "SENODATE OÜ, registration number 17594191, is responsible for the Website’s use of cookies. Contact: info@keyarcade.com.",
+          "PRENKORO OÜ, registration number 17555038, is responsible for the Website’s use of cookies. Contact: info@keyarcade.com.",
         ],
       },
       {
@@ -600,7 +600,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "10. Changes and Contact",
         body: [
           "We may update this Policy when technologies, purposes or legal requirements change. The current version will be published with its last-updated date.",
-          "Questions may be sent to SENODATE OÜ at info@keyarcade.com.",
+          "Questions may be sent to PRENKORO OÜ at info@keyarcade.com.",
         ],
       },
     ],
@@ -644,7 +644,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "5. Customer Email Responsibilities",
         body: [
           "Customers must enter a valid email address, keep it accessible and protect it against unauthorised access.",
-          "SENODATE OÜ is not responsible for delay caused solely by an incorrectly entered email address, an over-quota mailbox, customer-side filtering or loss of access, but will provide reasonable assistance after identity and Order details are verified.",
+          "PRENKORO OÜ is not responsible for delay caused solely by an incorrectly entered email address, an over-quota mailbox, customer-side filtering or loss of access, but will provide reasonable assistance after identity and Order details are verified.",
         ],
       },
       {
@@ -697,7 +697,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
     title: "Complaints and Dispute Resolution Policy",
     updated: UPDATED,
     intro:
-      "This Policy explains how Customers can submit a complaint and how SENODATE OÜ handles unresolved consumer disputes.",
+      "This Policy explains how Customers can submit a complaint and how PRENKORO OÜ handles unresolved consumer disputes.",
     sections: [
       {
         heading: "1. Contacting Us First",
@@ -725,13 +725,13 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "3. Acknowledgement and Review",
         body: [
           "We will review the complaint fairly, consider relevant evidence and may request proportionate additional information.",
-          "The Customer will not be required to obtain evidence that is impossible or unreasonably burdensome where SENODATE OÜ or its fulfilment provider can reasonably verify the relevant fact.",
+          "The Customer will not be required to obtain evidence that is impossible or unreasonably burdensome where PRENKORO OÜ or its fulfilment provider can reasonably verify the relevant fact.",
         ],
       },
       {
         heading: "4. Response Time",
         body: [
-          "For consumer complaints governed by Estonian law, SENODATE OÜ will provide a written response no later than 15 days after receiving the complaint.",
+          "For consumer complaints governed by Estonian law, PRENKORO OÜ will provide a written response no later than 15 days after receiving the complaint.",
           "If the matter cannot be fully resolved within that period, the response will explain our position, any information still needed and the proposed next step.",
         ],
       },
@@ -751,7 +751,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "7. Consumer Disputes Committee",
         body: [
-          "If a dispute between a consumer resident in Estonia and SENODATE OÜ cannot be resolved directly, the consumer may apply to the independent Estonian Consumer Disputes Committee.",
+          "If a dispute between a consumer resident in Estonia and PRENKORO OÜ cannot be resolved directly, the consumer may apply to the independent Estonian Consumer Disputes Committee.",
           "Consumer Disputes Committee, Endla 10A, 10122 Tallinn, Estonia. Website: https://ttja.ee/en/consumer-disputes-committee.",
         ],
       },
@@ -848,20 +848,20 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "7. Product and Intellectual-Property Abuse",
         body: [
-          "Customers must not reproduce, publish, sell or distribute Product Codes unlawfully, remove proprietary notices, misrepresent affiliation with SENODATE OÜ or a Publisher, or use Website materials in a manner infringing intellectual-property rights.",
+          "Customers must not reproduce, publish, sell or distribute Product Codes unlawfully, remove proprietary notices, misrepresent affiliation with PRENKORO OÜ or a Publisher, or use Website materials in a manner infringing intellectual-property rights.",
         ],
       },
       {
         heading: "8. Enforcement Measures",
         body: [
-          "Where reasonably supported by the circumstances, SENODATE OÜ may delay or refuse an Order, request proportionate verification, restrict purchasing, suspend an Account, cancel an affected Order, preserve evidence or report suspected unlawful activity.",
+          "Where reasonably supported by the circumstances, PRENKORO OÜ may delay or refuse an Order, request proportionate verification, restrict purchasing, suspend an Account, cancel an affected Order, preserve evidence or report suspected unlawful activity.",
           "Measures will be proportionate to the risk and will not remove mandatory consumer rights. Where appropriate, the Customer may contact support to explain the circumstances or contest an Account measure.",
         ],
       },
       {
         heading: "9. Refunds Following Cancellation",
         body: [
-          "If SENODATE OÜ cancels an unfulfilled Order under this Policy after payment has been collected, the amount due will be returned to the original payment method unless the funds are lawfully frozen, reversed or otherwise subject to a binding restriction.",
+          "If PRENKORO OÜ cancels an unfulfilled Order under this Policy after payment has been collected, the amount due will be returned to the original payment method unless the funds are lawfully frozen, reversed or otherwise subject to a binding restriction.",
         ],
       },
       {
@@ -878,7 +878,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
     title: "Accessibility Statement",
     updated: UPDATED,
     intro:
-      "SENODATE OÜ aims to make keyarcade.com and the associated purchasing journey usable by as many people as reasonably possible, including people who use assistive technologies.",
+      "PRENKORO OÜ aims to make keyarcade.com and the associated purchasing journey usable by as many people as reasonably possible, including people who use assistive technologies.",
     sections: [
       {
         heading: "1. Our Approach",
