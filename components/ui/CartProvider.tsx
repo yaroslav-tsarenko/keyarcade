@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
 import type { Game } from "@/lib/catalog-types";
+import { PURCHASE_LIMITS, lookupPromo } from "@/lib/site-config";
 
 // Client-side cart persisted to localStorage. Stores the full Game snapshot so
 // live Kinguin products (which can't be looked up from static data later) still
@@ -15,6 +16,12 @@ interface Ctx {
   lines: CartLine[];
   count: number;
   subtotalEur: number;
+  /** Applied promo code, or null. Lives here so the cart and the checkout
+   *  cannot show two different totals. */
+  promo: { code: string; off: number } | null;
+  setPromo: (promo: { code: string; off: number } | null) => void;
+  discountEur: number;
+  totalEur: number;
   add: (game: Game, qty?: number) => void;
   setQty: (slug: string, qty: number) => void;
   remove: (slug: string) => void;
@@ -24,10 +31,14 @@ interface Ctx {
 
 const CartContext = createContext<Ctx | null>(null);
 const KEY = "blk_cart";
-const MAX_QTY = 10;
+const PROMO_KEY = "blk_promo";
+// The cart must not let a shopper build an order the policies and the order
+// endpoint will refuse — the published cap is the only cap.
+const MAX_QTY = PURCHASE_LIMITS.maxQtyPerItem;
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
   const [lines, setLines] = useState<CartLine[]>([]);
+  const [promo, setPromo] = useState<{ code: string; off: number } | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -37,6 +48,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         const parsed = JSON.parse(raw);
         if (Array.isArray(parsed)) setLines(parsed);
       }
+      // Re-resolve the stored code rather than trusting a stored percentage, so
+      // a withdrawn promo stops applying and a tampered value cannot stick.
+      setPromo(lookupPromo(localStorage.getItem(PROMO_KEY) ?? ""));
     } catch {
       /* ignore corrupt cart */
     }
@@ -47,10 +61,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!ready) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(lines));
+      if (promo) localStorage.setItem(PROMO_KEY, promo.code);
+      else localStorage.removeItem(PROMO_KEY);
     } catch {
       /* storage full / unavailable */
     }
-  }, [lines, ready]);
+  }, [lines, promo, ready]);
 
   const add = useCallback((game: Game, qty = 1) => {
     setLines((ls) => {
@@ -77,13 +93,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     [],
   );
 
-  const clear = useCallback(() => setLines([]), []);
+  const clear = useCallback(() => {
+    setLines([]);
+    setPromo(null);
+  }, []);
 
   const count = useMemo(() => lines.reduce((n, l) => n + l.qty, 0), [lines]);
   const subtotalEur = useMemo(() => lines.reduce((s, l) => s + l.game.price * l.qty, 0), [lines]);
+  const discountEur = promo ? subtotalEur * promo.off : 0;
+  const totalEur = subtotalEur - discountEur;
 
   return (
-    <CartContext.Provider value={{ lines, count, subtotalEur, add, setQty, remove, clear, ready }}>
+    <CartContext.Provider
+      value={{ lines, count, subtotalEur, promo, setPromo, discountEur, totalEur, add, setQty, remove, clear, ready }}
+    >
       {children}
     </CartContext.Provider>
   );

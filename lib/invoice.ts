@@ -8,6 +8,7 @@ export interface InvoiceData {
   customerName?: string;
   currency: CurrencyCode;
   items: { name: string; qty: number; priceEur: number }[];
+  promo?: { code: string; amountEur: number };
 }
 
 // Builds a PDF invoice buffer. Prices are stored in EUR and rendered in the
@@ -68,7 +69,14 @@ export function buildInvoice(data: InvoiceData): Promise<Buffer> {
 
     doc.moveTo(50, doc.y + 4).lineTo(545, doc.y + 4).strokeColor("#e0cba3").stroke();
     doc.moveDown();
-    doc.fontSize(12).fillColor("#191207").text(`Total: ${money(subtotal)}`, { align: "right" });
+    if (data.promo) {
+      doc.fontSize(10).fillColor("#3a2f1e").text(`Subtotal: ${money(subtotal)}`, { align: "right" });
+      doc.text(`Promo ${data.promo.code}: −${money(data.promo.amountEur)}`, { align: "right" });
+    }
+    doc
+      .fontSize(12)
+      .fillColor("#191207")
+      .text(`Total: ${money(subtotal - (data.promo?.amountEur ?? 0))}`, { align: "right" });
     doc.moveDown(2);
 
     doc

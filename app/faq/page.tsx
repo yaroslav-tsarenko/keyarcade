@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { MessageCircle, Mail, Clock } from "lucide-react";
+import { MessageCircle, Mail, Clock, Phone } from "lucide-react";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { ButtonLink } from "@/components/ui/Button";
 import { ACTIVATION_STEPS } from "@/lib/catalog-types";
+import { COMPANY } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "Support & FAQ",
@@ -38,7 +39,13 @@ export default function FaqPage() {
             <ul className="mt-5 flex flex-col gap-3 text-sm">
               <li className="flex items-center gap-3">
                 <Mail width={17} height={17} className="text-preorder" />
-                <span className="font-semibold">info@keyarcade.com</span>
+                <span className="font-semibold">{COMPANY.email}</span>
+              </li>
+              <li className="flex items-center gap-3">
+                <Phone width={17} height={17} className="text-preorder" />
+                <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="font-semibold underline-offset-4 hover:underline">
+                  {COMPANY.phone}
+                </a>
               </li>
               <li className="flex items-center gap-3">
                 <Clock width={17} height={17} className="text-preorder" />

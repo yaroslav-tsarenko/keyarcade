@@ -72,7 +72,8 @@ export default async function ProductPage({
         {/* buy column */}
         <div>
           <p className="eyebrow tnum">
-            {game.kind} · {game.releaseYear}
+            {game.kind}
+            {game.releaseYear ? ` · ${game.releaseYear}` : ""}
           </p>
           <h1 className="mt-2.5 text-stage text-balance text-ink">{game.title}</h1>
           <p className="mt-3 max-w-xl text-pretty text-lg text-ink-muted">{game.tagline}</p>

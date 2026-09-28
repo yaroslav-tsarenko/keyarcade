@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { orderKeys, isKinguinConfigured } from "@/lib/kinguin";
 import { buildInvoice } from "@/lib/invoice";
 import { sendOrderEmail } from "@/lib/email";
-import { CURRENCIES, PURCHASE_LIMITS, type CurrencyCode } from "@/lib/site-config";
+import { CURRENCIES, PURCHASE_LIMITS, lookupPromo, type CurrencyCode } from "@/lib/site-config";
 
 interface CartItem {
   productId: string;
@@ -31,6 +31,7 @@ export async function POST(req: Request) {
         email?: string;
         currency?: CurrencyCode;
         withdrawalWaived?: boolean;
+        promoCode?: string | null;
       }
     | null;
 
@@ -67,7 +68,10 @@ export async function POST(req: Request) {
   }
 
   const currency: CurrencyCode = body?.currency && body.currency in CURRENCIES ? body.currency : "EUR";
-  const total = items.reduce((s, i) => s + i.priceEur * i.qty, 0);
+  // Resolve the discount from the code server-side. An unknown or withdrawn
+  // code simply yields no discount rather than failing the order.
+  const promo = lookupPromo(body?.promoCode ?? "");
+  const total = orderValue - (promo ? orderValue * promo.off : 0);
   const orderId = makeOrderId();
 
   // Issue keys: real Kinguin dispatch when configured, otherwise demo keys so
@@ -117,6 +121,7 @@ export async function POST(req: Request) {
       customerName: user ? `${user.first_name} ${user.last_name}` : undefined,
       currency,
       items: items.map((i) => ({ name: i.name, qty: i.qty, priceEur: i.priceEur })),
+      promo: promo ? { code: promo.code, amountEur: orderValue * promo.off } : undefined,
     });
     await sendOrderEmail(
       email,

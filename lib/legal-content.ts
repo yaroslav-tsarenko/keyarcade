@@ -249,7 +249,7 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         body: [
           "We may update these Terms to reflect changes in law, Products, payment methods, security or Website functions. The version presented when an Order was submitted generally governs that Order; updates will not retroactively remove established rights.",
           "If a provision is unlawful or unenforceable, it will be limited to the minimum necessary and the remainder will continue. Failure to enforce a provision is not a waiver.",
-          "Contact: PRENKORO OÜ, registration number 17555038, Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145, Estonia; info@keyarcade.com; https://www.keyarcade.com.",
+          "Contact: PRENKORO OÜ, registration number 17555038, Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145, Estonia; info@keyarcade.com; https://keyarcade.com.",
         ],
       },
     ],

@@ -18,7 +18,7 @@ interface IssuedKey {
 
 export function CheckoutForm() {
   const { currency } = useCurrency();
-  const { lines, subtotalEur, clear, ready } = useCart();
+  const { lines, subtotalEur, promo, discountEur, totalEur, clear, ready } = useCart();
   const [email, setEmail] = useState("");
   const [agree, setAgree] = useState(false);
   const [waiveWithdrawal, setWaiveWithdrawal] = useState(false);
@@ -30,7 +30,7 @@ export function CheckoutForm() {
   const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.trim());
   const emailError = touched && !emailValid;
 
-  const total = subtotalEur;
+  const total = totalEur;
 
   // Same caps the order endpoint enforces. Surfaced here so a shopper is told
   // before paying rather than rejected after.
@@ -60,6 +60,9 @@ export function CheckoutForm() {
         // Recorded with the order as proof the consumer asked for immediate
         // delivery before the key was issued.
         withdrawalWaived: waiveWithdrawal,
+        // The code, not the amount — the server re-resolves the discount so the
+        // price charged is the one we published, not one the client sent.
+        promoCode: promo?.code ?? null,
         items: lines.map((l) => ({
           // slug is `name-<kinguinId>`; the trailing segment is the order id.
           productId: l.game.slug.split("-").pop() ?? l.game.slug,
@@ -191,8 +194,14 @@ export function CheckoutForm() {
           <dl className="mt-4 flex flex-col gap-2 border-t border-edge pt-4 text-sm">
             <div className="flex justify-between">
               <dt className="text-ink-muted">Subtotal</dt>
-              <dd><Price eur={total} className="font-bold tabular-nums" /></dd>
+              <dd><Price eur={subtotalEur} className="font-bold tabular-nums" /></dd>
             </div>
+            {promo && discountEur > 0 && (
+              <div className="flex justify-between">
+                <dt className="text-ink-muted">Promo ({promo.code})</dt>
+                <dd className="font-bold tabular-nums">−<Price eur={discountEur} /></dd>
+              </div>
+            )}
             <div className="flex justify-between">
               <dt className="text-ink-muted">Delivery</dt>
               <dd className="font-bold text-stock">Automated · free</dd>

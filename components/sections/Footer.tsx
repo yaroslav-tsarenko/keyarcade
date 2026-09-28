@@ -12,7 +12,7 @@ const COLUMNS = [
     title: "Shop",
     links: [
       ...PLATFORM_LINKS.slice(0, 4),
-      { label: "Deals", href: "/catalog?deals=1" },
+      { label: "Cheapest", href: "/catalog?deals=1" },
       { label: "Gift cards", href: "/catalog?kind=Gift%20card" },
     ],
   },

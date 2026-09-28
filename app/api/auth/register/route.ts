@@ -34,6 +34,16 @@ export async function POST(req: Request) {
   if (body.password.length < 8) {
     return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
   }
+  // Terms §3 restricts accounts to adults, so the birth date we already collect
+  // has to actually be checked rather than just stored.
+  const born = new Date(body.birthDate.trim());
+  if (Number.isNaN(born.getTime())) {
+    return NextResponse.json({ error: "Enter a valid date of birth" }, { status: 400 });
+  }
+  const eighteenth = new Date(born.getFullYear() + 18, born.getMonth(), born.getDate());
+  if (eighteenth > new Date()) {
+    return NextResponse.json({ error: "You must be 18 or older to open an account" }, { status: 403 });
+  }
   if (!COUNTRIES.some((c) => c.code === body.country)) {
     return NextResponse.json({ error: "We can't ship to the selected country" }, { status: 400 });
   }

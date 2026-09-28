@@ -18,12 +18,11 @@ function parseKind(v?: string): ProductKind | undefined {
   return KINDS.find((k) => k.toLowerCase() === v?.toLowerCase());
 }
 
-// New releases and Top charts are catalogue *views*, not just the raw wall:
-// each lands on a distinct initial ordering so the page visibly differs from
-// the default shelf.
+// Each view is named after the ordering it actually applies. We publish no
+// sales figures, so no view may be labelled as a popularity chart.
 function parseSort(v?: string): { sort?: Sort; heading?: string } {
   if (v === "new") return { sort: "Newest", heading: "New releases" };
-  if (v === "top") return { sort: "Price: high to low", heading: "Top charts" };
+  if (v === "top") return { sort: "Price: high to low", heading: "Premium keys" };
   return {};
 }
 
@@ -49,11 +48,11 @@ export default async function CatalogPage({
   // carved out of one small page. Pull several pages deep so the wall is
   // hundreds of keys and the client-side filters have real breadth to work with.
   const wall = await getCatalogWall({ platform, genre, q: effectiveQ });
-  // Kinguin already filtered by genre, but a title tagged e.g. [Action, Racing,
-  // Sport] can be classified under a different facet by our local mapper, which
-  // the client-side genre filter would then drop. Trust Kinguin's match and
-  // label every returned key with the genre the shopper actually asked for.
-  const games = genre ? wall.games.map((g) => ({ ...g, genre })) : wall.games;
+  // Kinguin has already narrowed the wall to this genre. Re-applying the local
+  // genre facet on top would drop titles our own mapper files elsewhere — and
+  // relabelling them to match the facet would be inventing product data — so
+  // the facet is left unselected and every key keeps its own genre.
+  const games = wall.games;
 
   const heading = q
     ? `“${q}”`
@@ -100,7 +99,7 @@ export default async function CatalogPage({
           query={{ platform, genre, q: effectiveQ }}
           loadedPages={WALL_PAGES}
           initialPlatform={platform}
-          initialGenre={genre}
+          initialGenre={undefined}
           initialKind={kind}
           initialSort={sort}
           deals={deals}

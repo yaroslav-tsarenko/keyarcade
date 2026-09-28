@@ -48,8 +48,10 @@ export default async function Home() {
       <Marquee items={ticker} />
 
       <div className="space-y-14 py-12 md:space-y-16 md:py-14">
-        <RailSection kicker="Deals" title="Biggest discounts today" games={deals} href="/catalog?deals=1" />
-        <RailSection kicker="Top charts" title="What everyone is buying" games={topCharts} href="/catalog?sort=top" numbered />
+        <RailSection kicker="Cheapest" title="Lowest prices on the shelf" games={deals} href="/catalog?deals=1" />
+        {/* Ordered by price, not by sales: we do not publish sales figures, so
+            the rail must not imply a popularity ranking we cannot evidence. */}
+        <RailSection kicker="Premium" title="The priciest keys we stock" games={topCharts} href="/catalog?sort=top" />
         <RailSection kicker="New releases" title="Fresh on the deck" games={fresh} href="/catalog?sort=new" />
       </div>
 

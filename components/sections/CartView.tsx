@@ -13,16 +13,15 @@ import { Price } from "@/components/ui/Price";
 import { useCart } from "@/components/ui/CartProvider";
 
 export function CartView() {
-  const { lines, subtotalEur, setQty, remove, ready } = useCart();
+  const { lines, subtotalEur, promo: applied, setPromo: setApplied, discountEur: promoOff, totalEur: total, setQty, remove, ready } = useCart();
   const [promo, setPromo] = useState("");
-  const [applied, setApplied] = useState<{ code: string; off: number } | null>(null);
   const [promoError, setPromoError] = useState<string | null>(null);
 
   function applyPromo() {
     const hit = lookupPromo(promo);
     if (!hit) {
       setApplied(null);
-      setPromoError("That code isn’t valid. Try BLK10.");
+      setPromoError("That code isn’t valid.");
       return;
     }
     setApplied(hit);
@@ -31,8 +30,6 @@ export function CartView() {
 
   const listTotal = lines.reduce((s, l) => s + (l.game.wasPrice ?? l.game.price) * l.qty, 0);
   const savedOnDeals = listTotal - subtotalEur;
-  const promoOff = applied ? subtotalEur * applied.off : 0;
-  const total = subtotalEur - promoOff;
 
   // Avoid flashing the empty state before localStorage is read.
   if (!ready) {
@@ -47,8 +44,8 @@ export function CartView() {
         </div>
         <h1 className="mt-6 text-stage text-ink">Cart&apos;s empty</h1>
         <p className="mx-auto mt-3 max-w-sm font-semibold text-ink-muted">
-          Nothing on the counter yet. The shelf is deep and half of it&apos;s on
-          sale — go grab a key.
+          Nothing on the counter yet. The shelf runs to well over a hundred
+          thousand keys — go grab one.
         </p>
         <div className="mt-7 flex flex-wrap justify-center gap-3">
           <ButtonLink href="/catalog" variant="signal" size="lg">
@@ -150,7 +147,7 @@ export function CartView() {
                   id="promo"
                   value={promo}
                   onChange={(e) => setPromo(e.target.value)}
-                  placeholder="BLK10"
+                  placeholder="Enter a code"
                   className="w-full bg-transparent py-2 text-sm font-semibold text-ink-invert outline-none placeholder:text-ink-invert/40"
                 />
               </div>
@@ -204,7 +201,7 @@ export function CartView() {
             Checkout <ArrowRight width={18} height={18} strokeWidth={3} />
           </ButtonLink>
           <p className="mt-3 text-center text-xs text-ink-invert/50">
-            Keys delivered to your email the moment payment clears.
+            Keys are emailed to you once payment is confirmed.
           </p>
         </div>
       </div>

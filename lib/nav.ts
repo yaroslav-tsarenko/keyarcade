@@ -11,9 +11,9 @@ export interface NavTab {
 export const NAV_TABS: NavTab[] = [
   { label: "Platforms", href: "/catalog", panel: "platforms" },
   { label: "Genres", href: "/catalog", panel: "genres" },
-  { label: "Deals", href: "/catalog?deals=1" },
+  { label: "Cheapest", href: "/catalog?deals=1" },
   { label: "New releases", href: "/catalog?sort=new" },
-  { label: "Top charts", href: "/catalog?sort=top" },
+  { label: "Premium", href: "/catalog?sort=top" },
   { label: "Gift cards", href: "/catalog?kind=Gift%20card" },
   { label: "Support", href: "/faq" },
 ];

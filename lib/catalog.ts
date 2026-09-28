@@ -208,7 +208,9 @@ function toGame(p: KinguinProduct): Game | null {
     wasPrice: null,
     rating: 0,
     reviews: 0,
-    releaseYear: p.releaseDate ? new Date(p.releaseDate).getFullYear() : new Date().getFullYear(),
+    // 0 means "the supplier did not tell us". Substituting the current year
+    // would print a guess as a fact on the product page.
+    releaseYear: p.releaseDate ? new Date(p.releaseDate).getFullYear() : 0,
     hue: HUES[h % HUES.length],
     tagline: toTagline(p.description),
     image: p.coverImage ?? p.screenshots[0] ?? null,
