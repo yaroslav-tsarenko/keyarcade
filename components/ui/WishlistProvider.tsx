@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
+import { useFunctionalConsent } from "@/components/sections/CookieConsent";
 
 // Lightweight wishlist persisted to localStorage. Only slugs are stored — the
 // heart is a save-for-later marker, not a full product snapshot like the cart.
@@ -17,6 +18,7 @@ const KEY = "blk_wishlist";
 export function WishlistProvider({ children }: { children: React.ReactNode }) {
   const [slugs, setSlugs] = useState<string[]>([]);
   const [ready, setReady] = useState(false);
+  const functionalOk = useFunctionalConsent();
 
   useEffect(() => {
     try {
@@ -31,14 +33,17 @@ export function WishlistProvider({ children }: { children: React.ReactNode }) {
     setReady(true);
   }, []);
 
+  // The wishlist is functional, not necessary, so it is only written to the
+  // device once the visitor has consented. Without consent it still works for
+  // the current visit, it is simply not remembered.
   useEffect(() => {
-    if (!ready) return;
+    if (!ready || !functionalOk) return;
     try {
       localStorage.setItem(KEY, JSON.stringify(slugs));
     } catch {
       /* storage full / unavailable */
     }
-  }, [slugs, ready]);
+  }, [slugs, ready, functionalOk]);
 
   const has = useCallback((slug: string) => slugs.includes(slug), [slugs]);
 

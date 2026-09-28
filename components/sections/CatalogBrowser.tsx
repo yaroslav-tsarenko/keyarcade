@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { ChevronDown, X, SlidersHorizontal } from "lucide-react";
-import type { Game, Platform, Genre, Region, ProductKind } from "@/lib/mock-data";
-import { PLATFORMS, GENRES, REGIONS, KINDS } from "@/lib/mock-data";
+import type { Game, Platform, Genre, Region, ProductKind } from "@/lib/catalog-types";
+import { PLATFORMS, GENRES, REGIONS, KINDS } from "@/lib/catalog-types";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { useCurrency } from "@/components/ui/CurrencyProvider";
 

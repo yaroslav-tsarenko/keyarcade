@@ -50,7 +50,7 @@ function shell(title: string, body: string): string {
     </div>
     <p style="font-size:11px;color:#3a2f1e;margin:16px 4px 0;line-height:1.5">
       ${COMPANY.legalName} · Reg. ${COMPANY.regNumber} · ${COMPANY.address}<br/>
-      Need help? <a href="mailto:${COMPANY.email}" style="color:#b8300f">${COMPANY.email}</a>
+      Need help? <a href="mailto:${COMPANY.email}" style="color:#b8300f">${COMPANY.email}</a> · ${COMPANY.phone}
     </p>
   </div></body></html>`;
 }
@@ -136,7 +136,13 @@ export async function sendOrderEmail(
       "Your keys are ready",
       `<p style="line-height:1.6">Thanks for your order <strong>${orderId}</strong>. Your keys are below and your PDF invoice is attached.</p>
        <table style="width:100%;border-collapse:collapse;margin:16px 0">${rows}</table>
-       <p style="line-height:1.6">Redeem each code in its matching launcher. Trouble activating? Reply to this email.</p>`,
+       <p style="line-height:1.6">Redeem each code in its matching launcher. Trouble activating? Reply to this email or call ${COMPANY.phone}.</p>
+       <p style="line-height:1.6;font-size:12px;color:#3a2f1e;border-top:1px solid #e0cba3;padding-top:12px">
+         This charge appears on your card statement as <strong>${COMPANY.billingDescriptor}</strong>.
+         You asked for delivery to begin immediately, so the 14-day right of withdrawal ended when
+         the key above was issued. A code that is invalid, already redeemed or revoked through no
+         fault of yours is still replaced or refunded.
+       </p>`,
     ),
     text: `Order ${orderId}\n${lines.map((l) => `${l.name} x${l.qty}: ${l.key}`).join("\n")}`,
     attachments: [

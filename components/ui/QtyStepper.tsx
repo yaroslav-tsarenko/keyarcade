@@ -2,11 +2,12 @@
 
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
+import { PURCHASE_LIMITS } from "@/lib/site-config";
 
 export function QtyStepper({
   initial = 1,
   min = 1,
-  max = 10,
+  max = PURCHASE_LIMITS.maxQtyPerItem,
   onChange,
 }: {
   initial?: number;

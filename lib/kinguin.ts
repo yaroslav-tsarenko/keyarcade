@@ -29,6 +29,7 @@ export interface KinguinProduct {
   publishers: string[];
   activationDetails: string;
   systemRequirements: string;
+  languages: string[];
 }
 
 export interface ProductPage {
@@ -137,6 +138,7 @@ function normalise(raw: any): KinguinProduct {
     publishers: Array.isArray(raw.publishers) ? raw.publishers.map(String) : [],
     activationDetails: String(raw.activationDetails ?? ""),
     systemRequirements: String(raw.systemRequirements ?? ""),
+    languages: Array.isArray(raw.languages) ? raw.languages.map(String) : [],
   };
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */

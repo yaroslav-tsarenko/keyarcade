@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
-import type { Game } from "@/lib/mock-data";
-import { discountPct } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
+import { discountPct } from "@/lib/catalog-types";
 import { PosterArt } from "@/components/ui/PosterArt";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { PriceSticker } from "@/components/ui/PriceSticker";

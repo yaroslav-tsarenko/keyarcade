@@ -9,7 +9,7 @@ import { PaymentMarks } from "@/components/ui/PaymentMarks";
 import { ButtonLink } from "@/components/ui/Button";
 import { useCurrency } from "@/components/ui/CurrencyProvider";
 import { useCart } from "@/components/ui/CartProvider";
-import { COMPANY } from "@/lib/site-config";
+import { COMPANY, PURCHASE_LIMITS } from "@/lib/site-config";
 
 interface IssuedKey {
   name: string;
@@ -21,6 +21,7 @@ export function CheckoutForm() {
   const { lines, subtotalEur, clear, ready } = useCart();
   const [email, setEmail] = useState("");
   const [agree, setAgree] = useState(false);
+  const [waiveWithdrawal, setWaiveWithdrawal] = useState(false);
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -31,10 +32,24 @@ export function CheckoutForm() {
 
   const total = subtotalEur;
 
+  // Same caps the order endpoint enforces. Surfaced here so a shopper is told
+  // before paying rather than rejected after.
+  const units = lines.reduce((n, l) => n + l.qty, 0);
+  const limitError =
+    lines.some((l) => l.qty > PURCHASE_LIMITS.maxQtyPerItem)
+      ? `A single order can include at most ${PURCHASE_LIMITS.maxQtyPerItem} copies of the same key.`
+      : units > PURCHASE_LIMITS.maxItemsPerOrder
+        ? `A single order can include at most ${PURCHASE_LIMITS.maxItemsPerOrder} keys.`
+        : total > PURCHASE_LIMITS.maxOrderValueEur
+          ? `A single order is capped at €${PURCHASE_LIMITS.maxOrderValueEur}.`
+          : null;
+
+  const canOrder = emailValid && agree && waiveWithdrawal && !limitError && lines.length > 0;
+
   async function placeOrder() {
     setTouched(true);
     setError(null);
-    if (!emailValid || !agree || lines.length === 0) return;
+    if (!canOrder) return;
     setLoading(true);
     const res = await fetch("/api/checkout", {
       method: "POST",
@@ -42,6 +57,9 @@ export function CheckoutForm() {
       body: JSON.stringify({
         email: email.trim(),
         currency,
+        // Recorded with the order as proof the consumer asked for immediate
+        // delivery before the key was issued.
+        withdrawalWaived: waiveWithdrawal,
         items: lines.map((l) => ({
           // slug is `name-<kinguinId>`; the trailing segment is the order id.
           productId: l.game.slug.split("-").pop() ?? l.game.slug,
@@ -133,26 +151,22 @@ export function CheckoutForm() {
           </div>
         </section>
 
+        {/* No card fields here by design. This site is not in PCI DSS scope:
+            card data is entered only on the payment provider's own hosted page,
+            where Strong Customer Authentication (3-D Secure) is applied. */}
         <section>
           <h2 className="text-2xl text-ink">2 · Payment</h2>
-          <p className="mt-2 text-sm font-semibold text-ink-muted">
-            Secure card payment. We accept Visa and Mastercard.
+          <p className="mt-2 max-w-md text-sm font-semibold text-ink-muted">
+            When you place the order you are taken to our payment provider&apos;s
+            secure page to enter your card details and complete 3-D Secure
+            authentication. Your card number is never entered on, sent to or
+            stored by this website.
           </p>
           <PaymentMarks className="mt-3" />
-          <div className="mt-4 grid max-w-lg gap-3 sm:grid-cols-2">
-            <div className="sm:col-span-2">
-              <label className="eyebrow mb-2 block">Card number</label>
-              <input inputMode="numeric" placeholder="4242 4242 4242 4242" className="w-full rounded-control border border-edge bg-[var(--glass)] px-3 py-2.5 text-sm lift-sm outline-none" />
-            </div>
-            <div>
-              <label className="eyebrow mb-2 block">Expiry</label>
-              <input placeholder="12 / 28" className="w-full rounded-control border border-edge bg-[var(--glass)] px-3 py-2.5 text-sm lift-sm outline-none" />
-            </div>
-            <div>
-              <label className="eyebrow mb-2 block">CVC</label>
-              <input inputMode="numeric" placeholder="123" className="w-full rounded-control border border-edge bg-[var(--glass)] px-3 py-2.5 text-sm lift-sm outline-none" />
-            </div>
-          </div>
+          <p className="mt-3 max-w-md text-sm font-semibold text-ink-muted">
+            The charge appears on your statement as{" "}
+            <strong className="text-ink">{COMPANY.billingDescriptor}</strong>.
+          </p>
         </section>
       </div>
 
@@ -176,29 +190,56 @@ export function CheckoutForm() {
 
           <dl className="mt-4 flex flex-col gap-2 border-t border-edge pt-4 text-sm">
             <div className="flex justify-between">
-              <dt className="text-ink-muted">Subtotal (incl. VAT)</dt>
+              <dt className="text-ink-muted">Subtotal</dt>
               <dd><Price eur={total} className="font-bold tabular-nums" /></dd>
             </div>
             <div className="flex justify-between">
               <dt className="text-ink-muted">Delivery</dt>
-              <dd className="font-bold text-stock">Instant · free</dd>
+              <dd className="font-bold text-stock">Automated · free</dd>
+            </div>
+            <div className="flex justify-between">
+              <dt className="text-ink-muted">VAT</dt>
+              <dd className="font-bold">Not charged</dd>
             </div>
           </dl>
           <div className="mt-4 flex items-baseline justify-between border-t border-edge pt-4">
             <span className="text-xl text-ink">Total</span>
             <Price eur={total} className="font-display text-4xl text-ink" />
           </div>
+          <p className="mt-2 text-[11px] leading-relaxed text-ink-muted/80">
+            This is the final price. {COMPANY.legalName} is not registered for VAT,
+            so no VAT is added or shown separately.
+          </p>
 
+          {/* Two separate ticks. Consumer law requires the express request for
+              immediate delivery — and the acknowledgement that it ends the
+              14-day withdrawal right — to be given on its own, not bundled into
+              a general acceptance of the terms. */}
           <label className="mt-4 flex items-start gap-2.5 text-xs font-medium text-ink-muted">
-            <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-4 w-4 accent-[var(--signal)]" />
-            I agree to the{" "}
-            <Link href="/legal/terms" className="font-bold text-ink underline">terms</Link> and{" "}
-            <Link href="/legal/refunds" className="font-bold text-ink underline">refund policy</Link>.
+            <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--signal)]" />
+            <span>
+              I agree to the{" "}
+              <Link href="/legal/terms" className="font-bold text-ink underline">terms</Link> and{" "}
+              <Link href="/legal/refunds" className="font-bold text-ink underline">refund policy</Link>.
+            </span>
           </label>
 
-          {error && <p className="mt-3 rounded-control bg-signal/15 px-3 py-2 text-sm font-bold text-signal-deep">{error}</p>}
+          <label className="mt-3 flex items-start gap-2.5 text-xs font-medium text-ink-muted">
+            <input type="checkbox" checked={waiveWithdrawal} onChange={(e) => setWaiveWithdrawal(e.target.checked)} className="mt-0.5 h-4 w-4 shrink-0 accent-[var(--signal)]" />
+            <span>
+              I expressly request that delivery of the digital content begins
+              immediately, and I acknowledge that I lose my 14-day right of
+              withdrawal once the key has been issued to me.
+            </span>
+          </label>
 
-          <button type="button" onClick={placeOrder} disabled={loading || !agree}
+          {(error || limitError) && (
+            <p className="mt-3 rounded-control bg-signal/15 px-3 py-2 text-sm font-bold text-signal-deep">
+              {error ?? limitError}
+            </p>
+          )}
+
+          <button type="button" onClick={placeOrder} disabled={loading || !canOrder}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded-control border border-edge bg-signal px-6 py-3.5 text-base font-semibold text-on-signal lift-sm transition-[filter] hover:brightness-[1.06] disabled:cursor-not-allowed disabled:opacity-50">
             {loading ? (
               <><Loader2 width={18} height={18} strokeWidth={2.5} className="animate-spin" /> Placing order…</>

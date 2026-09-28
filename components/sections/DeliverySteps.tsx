@@ -1,5 +1,5 @@
 import { CreditCard, MailCheck, Gamepad2 } from "lucide-react";
-import { DELIVERY_STEPS } from "@/lib/mock-data";
+import { DELIVERY_STEPS } from "@/lib/catalog-types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 const ICONS = [CreditCard, MailCheck, Gamepad2];
@@ -11,7 +11,7 @@ const ICONS = [CreditCard, MailCheck, Gamepad2];
 export function DeliverySteps() {
   return (
     <section className="mx-auto max-w-[1500px] px-4 md:px-6">
-      <SectionHeading kicker="How it works" title="Three steps, about a minute" />
+      <SectionHeading kicker="How it works" title="Three steps to your key" />
       <ol className="grid gap-4 md:grid-cols-3">
         {DELIVERY_STEPS.map((step, i) => {
           const Icon = ICONS[i] ?? CreditCard;

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Heart, Plus, Zap } from "lucide-react";
-import type { Game } from "@/lib/mock-data";
-import { discountPct } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
+import { discountPct } from "@/lib/catalog-types";
 import { useCart } from "@/components/ui/CartProvider";
 import { useWishlist } from "@/components/ui/WishlistProvider";
 import { PosterArt, coverTint } from "./PosterArt";
@@ -105,7 +105,7 @@ export function ProductCard({
               {game.kind === "Game" ? game.region : game.kind}
             </Badge>
             <Badge tone="stock" className="ml-auto shrink-0">
-              <Zap width={11} height={11} aria-hidden /> Instant
+              <Zap width={11} height={11} aria-hidden /> In stock
             </Badge>
           </div>
 

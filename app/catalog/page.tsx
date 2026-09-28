@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getCatalogWall, WALL_PAGES } from "@/lib/catalog";
-import { PLATFORMS, GENRES, KINDS, type Platform, type Genre, type ProductKind } from "@/lib/mock-data";
+import { PLATFORMS, GENRES, KINDS, type Platform, type Genre, type ProductKind } from "@/lib/catalog-types";
 import { CatalogBrowser, type Sort } from "@/components/sections/CatalogBrowser";
 
 export const metadata: Metadata = {
@@ -55,11 +55,6 @@ export default async function CatalogPage({
   // label every returned key with the genre the shopper actually asked for.
   const games = genre ? wall.games.map((g) => ({ ...g, genre })) : wall.games;
 
-  // Never pre-select a filter that would empty the page: if the returned pool
-  // has nothing of this kind, land unfiltered rather than on "no results".
-  const kindMatches = kind ? games.some((g) => g.kind === kind) : false;
-  const initialKind = kindMatches ? kind : undefined;
-
   const heading = q
     ? `“${q}”`
     : deals
@@ -106,7 +101,7 @@ export default async function CatalogPage({
           loadedPages={WALL_PAGES}
           initialPlatform={platform}
           initialGenre={genre}
-          initialKind={initialKind}
+          initialKind={kind}
           initialSort={sort}
           deals={deals}
         />

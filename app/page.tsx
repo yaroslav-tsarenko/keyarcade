@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { Marquee } from "@/components/sections/Marquee";
 import { Hero } from "@/components/sections/Hero";
 import { RailSection } from "@/components/sections/RailSection";
-import { ReleaseTabs } from "@/components/sections/ReleaseTabs";
 import { GenreExplorer } from "@/components/sections/GenreExplorer";
 import { PlatformShowcase } from "@/components/sections/PlatformShowcase";
 import { GiftCards } from "@/components/sections/GiftCards";
@@ -12,7 +11,7 @@ import { TrustBand } from "@/components/sections/TrustBand";
 import { HomeFaq } from "@/components/sections/HomeFaq";
 import { getHomeData } from "@/lib/catalog";
 import { getCurrentUser } from "@/lib/auth";
-import { PLATFORMS } from "@/lib/mock-data";
+import { PLATFORMS } from "@/lib/catalog-types";
 
 export default async function Home() {
   // Signed-in shoppers land in their library rather than the shop front.
@@ -25,7 +24,6 @@ export default async function Home() {
     deals,
     topCharts,
     fresh,
-    preorders,
     underTen,
     byPlatform,
     genres,
@@ -52,7 +50,7 @@ export default async function Home() {
       <div className="space-y-14 py-12 md:space-y-16 md:py-14">
         <RailSection kicker="Deals" title="Biggest discounts today" games={deals} href="/catalog?deals=1" />
         <RailSection kicker="Top charts" title="What everyone is buying" games={topCharts} href="/catalog?sort=top" numbered />
-        <ReleaseTabs fresh={fresh} preorders={preorders} />
+        <RailSection kicker="New releases" title="Fresh on the deck" games={fresh} href="/catalog?sort=new" />
       </div>
 
       <GenreExplorer games={[...fresh, ...underTen, ...topCharts, ...deals]} genres={genres} />

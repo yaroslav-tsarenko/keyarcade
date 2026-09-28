@@ -53,6 +53,37 @@ export default async function LegalPage({
                   </h3>
                 );
               }
+              if ("table" in block) {
+                return (
+                  <div key={i} className="mt-4 overflow-x-auto">
+                    <table className="w-full min-w-[640px] border-collapse text-left text-sm">
+                      <thead>
+                        <tr>
+                          {block.table.columns.map((c) => (
+                            <th key={c} className="eyebrow border-b border-edge pb-2 pr-4 align-bottom">
+                              {c}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {block.table.rows.map((row, r) => (
+                          <tr key={r}>
+                            {row.map((cell, c) => (
+                              <td
+                                key={c}
+                                className="border-b border-edge py-2.5 pr-4 align-top leading-relaxed text-ink-muted"
+                              >
+                                {c === 0 ? <code className="font-mono text-ink">{cell}</code> : cell}
+                              </td>
+                            ))}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                );
+              }
               return (
                 <ul key={i} className="mt-2 flex list-disc flex-col gap-1.5 pl-5 text-[15px] leading-relaxed text-ink-muted">
                   {block.list.map((li, j) => (

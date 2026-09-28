@@ -7,6 +7,7 @@ import {
   formatMoney,
   type CurrencyCode,
 } from "@/lib/site-config";
+import { useFunctionalConsent } from "@/components/sections/CookieConsent";
 
 interface Ctx {
   currency: CurrencyCode;
@@ -27,15 +28,22 @@ function readCookie(): CurrencyCode {
 
 export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
+  const functionalOk = useFunctionalConsent();
 
   useEffect(() => {
     setCurrencyState(readCookie());
   }, []);
 
-  const setCurrency = useCallback((c: CurrencyCode) => {
-    setCurrencyState(c);
-    document.cookie = `${COOKIE}=${c}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
-  }, []);
+  // The currency choice applies immediately either way; the cookie that
+  // carries it to the next visit is functional, so it needs consent.
+  const setCurrency = useCallback(
+    (c: CurrencyCode) => {
+      setCurrencyState(c);
+      if (!functionalOk) return;
+      document.cookie = `${COOKIE}=${c}; path=/; max-age=${60 * 60 * 24 * 365}; samesite=lax`;
+    },
+    [functionalOk],
+  );
 
   const format = useCallback((eur: number) => formatMoney(eur, currency), [currency]);
 

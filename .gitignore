@@ -46,3 +46,6 @@ next-env.d.ts
 # JetBrains
 .idea/
 assets/img.png
+
+# Acquirer compliance correspondence — must never reach a public repo
+/assets

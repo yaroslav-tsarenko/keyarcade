@@ -2,7 +2,7 @@
 
 import { useRef, useState, useCallback, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { ProductCard } from "./ProductCard";
 import { cx } from "@/lib/cx";
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState, useCallback, useMemo } from "react";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 
 // Client-side cart persisted to localStorage. Stores the full Game snapshot so
 // live Kinguin products (which can't be looked up from static data later) still

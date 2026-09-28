@@ -27,7 +27,7 @@ export function MiniCart({ onClose }: { onClose: () => void }) {
 
       {lines.length === 0 ? (
         <p className="px-4 py-6 text-sm text-ink-muted">
-          Nothing here yet. Add a key and it shows up instantly.
+          Nothing here yet. Add a key and it shows up here.
         </p>
       ) : (
         <ul className="max-h-72 overflow-y-auto py-1.5">

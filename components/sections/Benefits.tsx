@@ -10,8 +10,8 @@ const BENEFITS = [
   },
   {
     icon: RefreshCw,
-    title: `${POLICY.refundDays}-day refunds on unused keys`,
-    body: "Changed your mind before revealing the code? Send it back. Once a key is revealed it cannot be un-sold.",
+    title: "Approved refunds in " + POLICY.refundDays + " days",
+    body: "Delivery starts at your request, which ends the 14-day withdrawal right. Where a refund is due, it goes back to your card within " + POLICY.refundDays + " days.",
   },
   {
     icon: Headphones,

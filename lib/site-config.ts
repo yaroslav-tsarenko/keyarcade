@@ -19,17 +19,35 @@ export const COMPANY = {
   address: "Harju maakond, Tallinn, Kesklinna linnaosa, Maakri tn 19/2, 10145",
   country: "Estonia",
   email: "info@keyarcade.com",
+  phone: "+372 5898 9735",
   // Merchant of Record shown at checkout
   merchantOfRecord: "PRENKORO OÜ",
+  // What the cardholder sees on their statement. Must stay recognisable as the
+  // brand they bought from, or the charge reads as unknown and gets disputed.
+  billingDescriptor: "KEYARCADE.COM",
 } as const;
 
-// Consistent policy values — referenced by legal pages, FAQ, checkout, footer
+// Consistent policy values — referenced by legal pages, FAQ, checkout, footer.
+// Every claim here has to be one the Refund/Delivery policies actually back up.
 export const POLICY = {
+  // Days within which an approved refund is sent back to the original payment
+  // method. This is a processing deadline, not a no-questions return window.
   refundDays: 14,
   supportHours: "Mon–Fri, 09:00–18:00 (EET)",
-  deliveryTime: "Instant — under a minute for in-stock keys",
+  // The Delivery Policy guarantees no exact time, so nothing on the storefront
+  // may promise one either.
+  deliveryTime: "Automated delivery once payment is confirmed",
   serviceFeePct: 0,
-  warranty: "Every key is replaced or refunded if it fails to activate",
+  warranty:
+    "A code that is invalid, already redeemed or revoked through no fault of yours is replaced or refunded",
+} as const;
+
+// Purchase caps. Stored-value and key products are attractive for card testing
+// and cash-out, so a single order cannot be used to clear stock at volume.
+export const PURCHASE_LIMITS = {
+  maxQtyPerItem: 5,
+  maxItemsPerOrder: 10,
+  maxOrderValueEur: 500,
 } as const;
 
 export type CurrencyCode = "GBP" | "EUR" | "USD";
@@ -70,8 +88,41 @@ export function formatMoney(amountEur: number, to: CurrencyCode): string {
 }
 
 // Country dropdown for registration. Sanctioned / excluded countries are kept
-// out of this list (extend BLOCKED_COUNTRIES to grow the exclusion set).
-export const BLOCKED_COUNTRIES = ["RU", "BY", "IR", "KP"] as const;
+// out of this list. This set must stay identical to the restricted-country list
+// in the Terms §5 and the Acceptable Use Policy §1 — a country we refuse in the
+// terms but offer in the dropdown is a contradiction an acquirer will flag.
+export const BLOCKED_COUNTRIES = [
+  "AF", // Afghanistan
+  "BY", // Belarus
+  "CF", // Central African Republic
+  "CU", // Cuba
+  "CD", // Democratic Republic of the Congo
+  "HT", // Haiti
+  "IR", // Iran
+  "IQ", // Iraq
+  "ML", // Mali
+  "MM", // Myanmar (Burma)
+  "KP", // North Korea
+  "RU", // Russia
+  "SO", // Somalia
+  "SS", // South Sudan
+  "SD", // Sudan
+  "SY", // Syria
+  "VE", // Venezuela
+  "YE", // Yemen
+  "ZW", // Zimbabwe
+] as const;
+
+// Territories under occupation that are subject to EU/OFAC territorial
+// restrictions. They carry no ISO country code of their own, so they are
+// screened by billing address and named explicitly in the policies.
+export const RESTRICTED_TERRITORIES = [
+  "Crimea",
+  "Donetsk",
+  "Luhansk",
+  "Zaporizhzhia (occupied areas)",
+  "Kherson (occupied areas)",
+] as const;
 
 export const COUNTRIES: { code: string; name: string; dial: string }[] = [
   { code: "AT", name: "Austria", dial: "+43" },

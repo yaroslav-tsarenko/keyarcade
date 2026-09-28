@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { Clock, ShieldCheck, Zap } from "lucide-react";
 import type { StageSlot } from "@/lib/catalog";
-import { discountPct } from "@/lib/mock-data";
+import { discountPct } from "@/lib/catalog-types";
 import { PosterArt, coverTint } from "@/components/ui/PosterArt";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { PriceSticker } from "@/components/ui/PriceSticker";
@@ -137,7 +137,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
                 <Badge>{game.genre}</Badge>
                 <Badge>{game.region}</Badge>
                 <Badge tone="stock">
-                  <Zap width={11} height={11} aria-hidden /> Instant delivery
+                  <Zap width={11} height={11} aria-hidden /> In stock
                 </Badge>
               </div>
 
@@ -150,7 +150,7 @@ export function Hero({ stage }: { stage: StageSlot[] }) {
 
               <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink-muted">
                 <li className="inline-flex items-center gap-2">
-                  <Clock width={15} height={15} className="text-signal" aria-hidden /> Delivered in a minute
+                  <Clock width={15} height={15} className="text-signal" aria-hidden /> Automated delivery
                 </li>
                 <li className="inline-flex items-center gap-2">
                   <ShieldCheck width={15} height={15} className="text-signal" aria-hidden /> Original keys

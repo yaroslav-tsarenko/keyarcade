@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { ShoppingCart, Zap, ShieldCheck, Heart, Check } from "lucide-react";
-import type { Game } from "@/lib/mock-data";
-import { discountPct } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
+import { discountPct } from "@/lib/catalog-types";
 import { PriceTag } from "@/components/ui/PriceTag";
 import { PriceSticker } from "@/components/ui/PriceSticker";
 import { QtyStepper } from "@/components/ui/QtyStepper";
@@ -21,8 +21,6 @@ export function ProductBuyBox({ game }: { game: Game }) {
   const [qty, setQty] = useState(1);
   const [added, setAdded] = useState(false);
   const saved = has(game.slug);
-
-  const isPreorder = game.kind === "Pre-order";
 
   function addToCart() {
     add(game, qty);
@@ -44,7 +42,7 @@ export function ProductBuyBox({ game }: { game: Game }) {
 
       <p className="mt-2 inline-flex items-center gap-2 text-sm font-bold text-stock">
         <Zap width={15} height={15} strokeWidth={3} />
-        {isPreorder ? "Key ships on launch day" : "In stock · delivered in a minute"}
+        In stock · automated delivery once payment is confirmed
       </p>
 
       <div className="mt-5 flex items-center gap-3">
@@ -61,7 +59,7 @@ export function ProductBuyBox({ game }: { game: Game }) {
           ) : (
             <>
               <ShoppingCart width={18} height={18} strokeWidth={2.5} />
-              {isPreorder ? "Pre-order key" : "Add to cart"}
+              Add to cart
             </>
           )}
         </Button>
@@ -90,7 +88,8 @@ export function ProductBuyBox({ game }: { game: Game }) {
 
       <p className="mt-5 flex items-center gap-2 border-t border-edge pt-4 text-xs font-semibold text-ink-muted">
         <ShieldCheck width={16} height={16} strokeWidth={2.5} className="text-stock" />
-        Original keys, sold once. Bad code? We replace or refund it.
+        Original keys, sold once. A code that is invalid, already redeemed or revoked
+        is replaced or refunded.
       </p>
     </div>
   );

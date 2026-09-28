@@ -6,10 +6,10 @@ import { CurrencySwitcher } from "@/components/ui/CurrencySwitcher";
 import { useTheme } from "@/components/ui/ThemeProvider";
 
 const REASSURANCE = [
-  "Instant key delivery",
-  "Original keys",
+  "Automated key delivery",
+  "Original keys, sold once",
   "Pay in EUR, GBP or USD",
-  "14-day refund window",
+  "Faulty key replaced or refunded",
 ];
 
 /** The slim strip above the deck: what the store promises, plus the two

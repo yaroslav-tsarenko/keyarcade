@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { X, ZoomIn } from "lucide-react";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { PosterArt } from "./PosterArt";
 
 // Product-page cover that opens a full, uncropped view of the artwork on click.

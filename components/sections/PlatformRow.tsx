@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { PLATFORMS } from "@/lib/mock-data";
+import { PLATFORMS } from "@/lib/catalog-types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 

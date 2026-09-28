@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { useWishlist } from "@/components/ui/WishlistProvider";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { ButtonLink } from "@/components/ui/Button";

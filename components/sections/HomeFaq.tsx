@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FAQ } from "@/lib/mock-data";
+import { FAQ } from "@/lib/catalog-types";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 
 /** The five questions that actually block a purchase, on the cool band.

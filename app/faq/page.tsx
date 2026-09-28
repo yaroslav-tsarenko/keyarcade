@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { MessageCircle, Mail, Clock } from "lucide-react";
 import { FaqAccordion } from "@/components/sections/FaqAccordion";
 import { ButtonLink } from "@/components/ui/Button";
-import { ACTIVATION_STEPS } from "@/lib/mock-data";
+import { ACTIVATION_STEPS } from "@/lib/catalog-types";
 
 export const metadata: Metadata = {
   title: "Support & FAQ",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { ProductCard } from "@/components/ui/ProductCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { cx } from "@/lib/cx";

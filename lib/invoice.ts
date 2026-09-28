@@ -75,8 +75,11 @@ export function buildInvoice(data: InvoiceData): Promise<Buffer> {
       .fontSize(8)
       .fillColor("#3a2f1e")
       .text(
-        "Digital goods (software activation keys). VAT handled under the applicable EU digital-services rules. " +
-          `This invoice was issued by ${COMPANY.legalName}. For support contact ${COMPANY.email}.`,
+        `Digital goods (software activation keys). ${COMPANY.legalName} is not registered for VAT, ` +
+          "so no VAT is charged and none is shown separately. Delivery began immediately at your " +
+          "express request, which ends the 14-day right of withdrawal once the key is issued. " +
+          `This charge appears on your statement as ${COMPANY.billingDescriptor}. ` +
+          `Invoice issued by ${COMPANY.legalName}. Support: ${COMPANY.email} · ${COMPANY.phone}.`,
         { align: "left" },
       );
 

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Trash2, Tag, ShoppingBag, ArrowRight } from "lucide-react";
-import { discountPct } from "@/lib/mock-data";
+import { discountPct } from "@/lib/catalog-types";
 import { lookupPromo } from "@/lib/site-config";
 import { PosterArt } from "@/components/ui/PosterArt";
 import { QtyStepper } from "@/components/ui/QtyStepper";
@@ -191,7 +191,7 @@ export function CartView() {
             )}
             <div className="flex justify-between">
               <dt className="text-ink-invert/75">Delivery</dt>
-              <dd className="font-bold text-stock">Instant · free</dd>
+              <dd className="font-bold text-stock">Automated · free</dd>
             </div>
           </dl>
 

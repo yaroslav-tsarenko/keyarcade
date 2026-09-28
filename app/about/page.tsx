@@ -5,14 +5,14 @@ import { SITE, POLICY } from "@/lib/site-config";
 
 export const metadata: Metadata = {
   title: "About the store",
-  description: `Who ${SITE.name} is: an independent retailer of digital game keys with instant delivery.`,
+  description: `Who ${SITE.name} is: an independent retailer of digital game keys.`,
 };
 
 const POINTS = [
   {
     icon: Zap,
-    title: "Instant delivery",
-    body: "In-stock keys land in your email and account library within a minute of payment. Pre-orders ship on launch day.",
+    title: "Automated delivery",
+    body: "Delivery runs automatically once your payment is confirmed: the key goes to your email and your account library. We only list keys that are already in stock — we do not sell pre-orders.",
   },
   {
     icon: BadgeCheck,
@@ -21,8 +21,8 @@ const POINTS = [
   },
   {
     icon: RefreshCw,
-    title: `${POLICY.refundDays}-day refunds on unused keys`,
-    body: POLICY.warranty + ".",
+    title: "A key that fails gets put right",
+    body: POLICY.warranty + ". Approved refunds reach your card within " + POLICY.refundDays + " days.",
   },
   {
     icon: Wallet,
@@ -40,7 +40,7 @@ export default function AboutPage() {
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-ink-muted">
           {SITE.name} is an independent retailer of digital game keys for Steam,
           Epic, Xbox, PlayStation, Nintendo and GOG. {SITE.tagline} Every code is
-          sold once and delivered by email the minute your payment clears. We are
+          sold once and delivered by email once your payment is confirmed. We are
           not affiliated with, endorsed by or sponsored by any platform holder or
           publisher — {SITE.name} is a storefront, not a launcher.
         </p>

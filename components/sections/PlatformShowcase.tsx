@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { TileRail } from "@/components/ui/Rail";
 import { cx } from "@/lib/cx";
 

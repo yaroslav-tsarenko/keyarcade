@@ -1,4 +1,4 @@
-import type { Game } from "@/lib/mock-data";
+import type { Game } from "@/lib/catalog-types";
 import { cx } from "@/lib/cx";
 
 /**

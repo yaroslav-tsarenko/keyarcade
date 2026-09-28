@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Mail, MapPin, Building2, Clock } from "lucide-react";
+import { Mail, MapPin, Building2, Clock, Phone } from "lucide-react";
 import { COMPANY, POLICY, SITE } from "@/lib/site-config";
 import { ContactForm } from "@/components/sections/ContactForm";
 
@@ -13,14 +13,19 @@ export default function ContactPage() {
       </span>
       <h1 className="mt-3 text-stage text-ink">Contact us</h1>
       <p className="mt-3 max-w-lg text-lg font-semibold text-ink-muted">
-        Questions about an order or a key? Email us and we'll get back within one
-        business day.
+        Questions about an order or a key? Call or email us — we answer the phone
+        during support hours and reply to email within one business day.
       </p>
 
       <div className="mt-8 grid gap-5 sm:grid-cols-2">
         <Row icon={Mail} label="Email">
           <a href={`mailto:${COMPANY.email}`} className="font-bold text-signal-deep underline">
             {COMPANY.email}
+          </a>
+        </Row>
+        <Row icon={Phone} label="Telephone">
+          <a href={`tel:${COMPANY.phone.replace(/\s/g, "")}`} className="font-bold text-signal-deep underline">
+            {COMPANY.phone}
           </a>
         </Row>
         <Row icon={Clock} label="Support hours">{POLICY.supportHours}</Row>

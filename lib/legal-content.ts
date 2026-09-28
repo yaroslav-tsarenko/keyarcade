@@ -1,8 +1,20 @@
 // Website policies, transcribed from the official Keyarcade policy pack.
-// A block is either a paragraph (string), a bulleted list ({ list }) or an
-// inline subheading ({ subheading }). The /legal/[doc] page renders each.
+// A block is a paragraph (string), a bulleted list ({ list }), an inline
+// subheading ({ subheading }) or a table ({ table }). The /legal/[doc] page
+// renders each.
 
-export type LegalBlock = string | { list: string[] } | { subheading: string };
+import { COOKIE_INVENTORY } from "@/lib/cookie-consent";
+
+export interface LegalTable {
+  columns: string[];
+  rows: string[][];
+}
+
+export type LegalBlock =
+  | string
+  | { list: string[] }
+  | { subheading: string }
+  | { table: LegalTable };
 
 export interface LegalSection {
   heading: string;
@@ -16,7 +28,7 @@ export interface LegalDoc {
   sections: LegalSection[];
 }
 
-const UPDATED = "2026-08-27";
+const UPDATED = "2026-09-28";
 
 export const LEGAL_DOCS: Record<string, LegalDoc> = {
   terms: {
@@ -76,8 +88,9 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "5. Geographic Restrictions",
         body: [
           "Products are not offered to persons located in, ordinarily resident in or purchasing from Afghanistan, Belarus, Central African Republic, Cuba, Democratic Republic of the Congo, Haiti, Iran, Iraq, Mali, Myanmar (Burma), North Korea, Russia, Somalia, South Sudan, Sudan, Syria, Venezuela, Yemen or Zimbabwe.",
+          "Products are likewise not offered to persons located in, ordinarily resident in or purchasing from Crimea, Donetsk, Luhansk and the occupied areas of Zaporizhzhia and Kherson. These territories carry no country code of their own and are screened on the billing address supplied at checkout.",
           "We may also refuse or cancel an Order where the Customer, payment instrument, transaction or intended use is subject to applicable sanctions, export controls, payment-network restrictions or other legal prohibitions.",
-          "You must not use a VPN, proxy, false address, third-party payment instrument or other means to conceal your actual location or bypass a geographic or Product-specific restriction.",
+          "You must not use a VPN, proxy, false address, third-party payment instrument or other means to conceal your actual location or bypass a geographic or Product-specific restriction. We do not list Product Codes whose activation region is a restricted market, and an Order placed through a concealed location may be cancelled and refunded.",
         ],
       },
       {
@@ -115,7 +128,8 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "10. Payment",
         body: [
           "Payments may be made using Visa and Mastercard. Availability may depend on country, currency, device, transaction value and security checks.",
-          "Payment is processed through authorised payment service infrastructure. PRENKORO OÜ does not normally receive or store the complete card number or card security code processed directly by the payment service provider.",
+          "Card details are entered only on the hosted payment page of our payment service provider, which is certified to PCI DSS. PRENKORO OÜ never receives, processes, transmits or stores the full card number, the card expiry date or the card security code. The Website does not present any card-entry field.",
+          "Card payments are authenticated using Strong Customer Authentication (3-D Secure) as applied by the payment service provider and your card issuer.",
           "You confirm that you are authorised to use the selected payment method, the billing information is accurate, sufficient funds or credit are available and the payment is not connected with fraud, money laundering, sanctions evasion or other unlawful conduct.",
         ],
       },
@@ -133,13 +147,14 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
           "Products are supplied digitally. Following successful payment and any required security review, the Product Code will normally be displayed in the Customer’s Account and sent to the email address provided for the Order.",
           "You are responsible for entering an accurate email address and maintaining access to it. If the email is not visible, check spam, junk and promotions folders, verify the Account email, review the Order page and contact info@keyarcade.com if the code remains unavailable.",
           "Delivery may be delayed by payment verification, security review, technical issues or temporary catalogue availability. No exact delivery time is guaranteed unless expressly stated during checkout.",
+          "The charge appears on your card statement as KEYARCADE.COM. If you do not recognise a charge, contact info@keyarcade.com or +372 5898 9735 before contacting your card issuer.",
         ],
       },
       {
         heading: "13. Immediate Supply and Right of Withdrawal",
         body: [
-          "Products are digital content not supplied on a tangible medium. Where applicable law provides a withdrawal period, we may ask you during checkout to expressly request immediate supply before that period expires and to acknowledge that you will lose the statutory withdrawal right once supply begins.",
-          "Where legally required, the request and acknowledgement will be obtained separately during checkout and confirmed in the Order confirmation or another durable electronic format.",
+          "Products are digital content not supplied on a tangible medium. At checkout you must tick a separate, dedicated box by which you expressly request that supply begins immediately and acknowledge that you thereby lose the 14-day statutory right of withdrawal once supply begins. This tick box is distinct from your acceptance of these Terms and no Order can be submitted without it.",
+          "The request and the acknowledgement are confirmed back to you in the Order confirmation email and on the invoice, in a durable electronic format.",
           "The withdrawal exception does not remove rights relating to a Product Code that is invalid, duplicate, previously redeemed, materially different from its description or otherwise non-conforming. See the Refund, Cancellation and Withdrawal Policy.",
         ],
       },
@@ -271,7 +286,8 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "4. Statutory Right of Withdrawal",
         body: [
-          "Consumers may have a statutory period in which to withdraw from a distance contract. For digital content not supplied on a tangible medium, that right may be lost once supply begins only where the consumer has expressly requested immediate supply, acknowledged the resulting loss of the withdrawal right and received the required confirmation.",
+          "Consumers have 14 days in which to withdraw from a distance contract. For digital content not supplied on a tangible medium, that right is lost once supply begins, but only where the consumer has expressly requested immediate supply, acknowledged the resulting loss of the withdrawal right and received the required confirmation.",
+          "At checkout we take that request and acknowledgement through a separate tick box, distinct from acceptance of the Terms, and confirm both in the Order confirmation email and on the invoice. Where a Customer does not give it, no Order is placed and no Product Code is issued.",
           "Where the required consent or confirmation has not been validly obtained, the Customer retains any withdrawal rights provided by applicable law.",
           "A withdrawal waiver does not waive rights relating to non-delivery, invalidity, duplication, prior redemption, revocation, misdescription or another lack of conformity.",
         ],
@@ -333,13 +349,13 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "11. Refund Method and Timing",
         body: [
           "Approved monetary refunds are normally returned to the original payment method. We will not require store credit instead of a monetary refund where applicable law entitles the Customer to money back.",
-          "Refunds will be initiated without undue delay and within any mandatory legal deadline. The bank or card issuer may require additional processing time after the refund is initiated. Currency movements and third-party bank charges may cause the received amount to differ from the Customer’s converted account value, although we refund the amount due in the transaction currency.",
+          "Approved refunds are initiated without undue delay and in any event within 14 days of the day we accept the refund claim. The bank or card issuer may require additional processing time after the refund is initiated. Currency movements and third-party bank charges may cause the received amount to differ from the Customer’s converted account value, although we refund the amount due in the transaction currency.",
         ],
       },
       {
         heading: "12. Chargebacks, Abuse and Contact",
         body: [
-          "Contact us before initiating a chargeback so we can investigate. This request does not restrict legitimate payment or consumer rights.",
+          "The charge appears on your card statement as KEYARCADE.COM. If you do not recognise a charge, contact us on info@keyarcade.com or +372 5898 9735 before initiating a chargeback so we can investigate. This request does not restrict legitimate payment or consumer rights.",
           "Fraudulent refund claims, altered evidence, false non-delivery statements or knowingly false chargebacks may lead to Account restrictions and may be reported where legally appropriate.",
           "Submit requests to info@keyarcade.com with the Order number and a concise explanation.",
         ],
@@ -412,7 +428,8 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "5. Payments",
         body: [
-          "Card payments are processed through payment service infrastructure. PRENKORO OÜ does not normally receive or store the complete payment-card number or card security code.",
+          "Card details are entered exclusively on the hosted payment page of our payment service provider, which is certified to PCI DSS. PRENKORO OÜ never receives, processes, transmits or stores the full payment-card number, the card expiry date or the card security code, and keyarcade.com presents no card-entry field at any point.",
+          "Our payment service provider is the controller of the card data you enter on its page and applies Strong Customer Authentication (3-D Secure) together with your card issuer.",
           "We receive limited transaction information such as payment status, amount, currency, reference, card type or masked details, and risk indicators necessary to administer the Order and prevent fraud.",
         ],
       },
@@ -549,38 +566,50 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
       {
         heading: "3. Cookie Categories",
         body: [
-          "Strictly necessary: used for core Website operation, security, Account login, checkout, fraud prevention, load balancing and consent choices. These cannot normally be disabled through the preference centre because the requested service would not function correctly.",
-          "Functional: remember optional preferences such as language, currency or interface choices.",
-          "Analytics: help understand Website use, navigation, performance and errors so the service can be improved.",
-          "Advertising: may be used to measure campaigns, limit repeated advertisements or personalise advertising where lawful and enabled.",
+          "Strictly necessary: used for core Website operation, security, Account login, checkout and recording your consent choice. These cannot be disabled through the preference centre because the requested service would not function correctly.",
+          "Functional: remember optional preferences — your display currency, your light or dark interface and your wishlist. These are set only after you consent, and are deleted if you withdraw consent.",
+          "We do not use analytics, advertising, profiling or cross-site tracking technologies on the Website, and no third party sets cookies through it.",
+          "The table below lists every cookie and similar technology the Website uses.",
+          {
+            table: {
+              columns: ["Name", "Type", "Category", "Purpose", "Duration"],
+              rows: COOKIE_INVENTORY.map((c) => [
+                c.name,
+                c.type,
+                c.category === "necessary" ? "Strictly necessary" : "Functional",
+                c.purpose,
+                c.duration,
+              ]),
+            },
+          },
         ],
       },
       {
         heading: "4. First-Party and Third-Party Technologies",
         body: [
-          "First-party cookies are set for the Website domain. Third-party technologies may be provided by service categories such as payments, security, infrastructure, consent management, analytics or advertising.",
-          "The cookie-preference interface identifies the technologies active for the visitor, their purposes and available choices.",
+          "Every technology listed in section 3 is first party: it is set for the keyarcade.com domain by us. No third party sets a cookie or reads storage through the Website.",
+          "Card payment takes place on the payment service provider’s own hosted page, on its own domain. Any technology that provider uses is governed by its own cookie notice, which is shown to you on that page.",
         ],
       },
       {
         heading: "5. Legal Bases and Consent",
         body: [
           "Strictly necessary technologies are used where required to provide a requested service, secure the Website or remember privacy choices.",
-          "Functional, analytics and advertising technologies that require consent will not be activated until valid consent is given. Refusing optional cookies must be as accessible as accepting them, and refusal does not prevent access to core Website functions.",
+          "Functional technologies are not written to your device until you give consent through the preference centre. Refusing them takes the same single click as accepting them, and refusal does not prevent access to any core Website function — your currency, theme and wishlist simply reset on your next visit.",
         ],
       },
       {
         heading: "6. Cookie Duration",
         body: [
           "Session cookies expire when the browser session ends. Persistent cookies remain for a defined period or until deleted.",
-          "Retention varies by purpose. The Website’s cookie-preference interface provides the current duration or expiry information for enabled technologies.",
+          "The duration of every technology we use is stated in the table in section 3.",
         ],
       },
       {
         heading: "7. Managing Preferences",
         body: [
-          "You can accept, reject or customise optional technologies through the cookie banner or preference centre. You may change or withdraw consent at any time through the cookie settings link available on the Website.",
-          "Withdrawal does not affect processing that was lawful before withdrawal. The preference will be applied prospectively and may require refreshing the page.",
+          "You can accept, reject or customise optional technologies through the cookie banner shown on your first visit. You may change or withdraw consent at any time using the “Cookie settings” link in the footer of every page, which reopens the same preference centre.",
+          "Withdrawing consent to functional technologies takes effect immediately and also deletes the functional entries already stored on your device. Withdrawal does not affect processing that was lawful before withdrawal.",
         ],
       },
       {
@@ -791,6 +820,17 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
               "South Sudan; Sudan; Syria; Venezuela; Yemen; and Zimbabwe.",
             ],
           },
+          "The same restriction applies to the following territories, which are subject to EU and OFAC territorial measures and carry no country code of their own. They are screened on the billing address supplied at checkout:",
+          {
+            list: [
+              "Crimea;",
+              "Donetsk;",
+              "Luhansk;",
+              "the occupied areas of Zaporizhzhia; and",
+              "the occupied areas of Kherson.",
+            ],
+          },
+          "The country list offered in Account registration and at checkout is the same list. A country that is restricted here is not selectable on the Website.",
         ],
       },
       {
@@ -804,14 +844,15 @@ export const LEGAL_DOCS: Record<string, LegalDoc> = {
         heading: "3. Location Accuracy",
         body: [
           "Customers must provide accurate country, billing and Account information. A payment instrument issued in a restricted jurisdiction or a material inconsistency between location indicators may trigger review.",
-          "You must not use a VPN, proxy, false address, nominee, forwarding arrangement or another person’s payment instrument to conceal location or bypass a restriction.",
+          "You must not use a VPN, proxy, false address, nominee, forwarding arrangement or another person’s payment instrument to conceal location or bypass a restriction. We do not list Product Codes whose activation region is a restricted market, and we do not describe any Product as requiring or supporting a VPN for activation.",
         ],
       },
       {
         heading: "4. Personal Use and Resale",
         body: [
           "Products are intended for legitimate personal use, including genuine personal gifting where the Product permits it.",
-          "Commercial resale, brokering, automated stock acquisition or redistribution of Product Codes requires prior written authorisation. Purchase limits may be applied to protect availability and reduce fraud.",
+          "Commercial resale, brokering, automated stock acquisition or redistribution of Product Codes requires prior written authorisation.",
+          "To protect availability and reduce fraud, a single Order is limited to 5 copies of the same Product, 10 Product Codes in total and a value of EUR 500. These limits are enforced at checkout.",
         ],
       },
       {

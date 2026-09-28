@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Search, Plus, Minus } from "lucide-react";
-import { FAQ } from "@/lib/mock-data";
+import { FAQ } from "@/lib/catalog-types";
 
 export function FaqAccordion() {
   const [query, setQuery] = useState("");

@@ -8,7 +8,7 @@ import {
   type Genre,
   type Region,
   type ProductKind,
-} from "@/lib/mock-data";
+} from "@/lib/catalog-types";
 import { listProducts, getProduct, isKinguinConfigured, type KinguinProduct } from "@/lib/kinguin";
 
 // Retail markup applied on top of Kinguin's cheapest offer (their price is our
@@ -71,9 +71,25 @@ function mapPlatform(raw: string): Platform {
   return "Steam";
 }
 
-function mapRegion(raw: string): Region {
+// A key locked to a sanctioned market cannot lawfully be sold, so it is not
+// mapped onto a region at all — `null` drops the product from the catalogue.
+const SANCTIONED_REGION_TERMS = [
+  "cis",
+  "russia",
+  "russian",
+  "belarus",
+  "iran",
+  "north korea",
+  "syria",
+  "cuba",
+  "crimea",
+  "donetsk",
+  "luhansk",
+];
+
+function mapRegion(raw: string): Region | null {
   const r = raw.toLowerCase();
-  if (r.includes("cis") || r.includes("ru")) return "CIS";
+  if (SANCTIONED_REGION_TERMS.some((t) => r.includes(t))) return null;
   if (r.includes("eu")) return "EU";
   if (r.includes("us") || r.includes("na")) return "NA";
   if (r.includes("uk")) return "UK";
@@ -100,15 +116,72 @@ function mapGenre(raw: string[]): Genre {
   return "Action";
 }
 
+// A subscription (Game Pass, PS Plus, EA Play…) is a recurring-access product,
+// not a game. Mislabelling one as "Game" put a game's feature list and PC
+// system requirements on a subscription card, so it gets its own kind.
 function mapKind(name: string): ProductKind {
   const n = name.toLowerCase();
+  if (
+    n.includes("game pass") ||
+    n.includes("ps plus") ||
+    n.includes("playstation plus") ||
+    n.includes("ea play") ||
+    n.includes("nintendo switch online") ||
+    n.includes("subscription") ||
+    /\b\d+\s*(month|day)s?\b/.test(n)
+  )
+    return "Subscription";
   if (n.includes("gift card") || n.includes("gift code") || n.includes("wallet") || n.includes("psn") && n.includes("card"))
     return "Gift card";
-  if (n.includes("pre-order") || n.includes("pre order") || n.includes("preorder"))
-    return "Pre-order";
   if (n.includes(" dlc") || n.includes("season pass") || n.includes("expansion") || n.includes("add-on"))
     return "DLC";
   return "Game";
+}
+
+// Edition, when the title names one. Shown as a product fact instead of being
+// buried in a long product name.
+const EDITIONS = [
+  "Ultimate Edition",
+  "Deluxe Edition",
+  "Gold Edition",
+  "Premium Edition",
+  "Complete Edition",
+  "Definitive Edition",
+  "Legendary Edition",
+  "Game of the Year Edition",
+  "Standard Edition",
+];
+
+function mapEdition(name: string): string {
+  const n = name.toLowerCase();
+  return EDITIONS.find((e) => n.includes(e.toLowerCase())) ?? "";
+}
+
+// Supplier descriptions are HTML. Strip the tags and collapse whitespace so the
+// product page shows readable prose rather than markup.
+function plain(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<\/p>/gi, "\n\n")
+    .replace(/<[^>]+>/g, "")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/[ \t]+/g, " ")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
+// A tagline must end on a sentence boundary — a mid-word cut reads as broken
+// placeholder text, which is exactly what the storefront must not ship.
+function toTagline(description: string): string {
+  const text = plain(description);
+  if (!text) return "";
+  const firstSentence = text.split(/(?<=[.!?])\s/)[0];
+  if (firstSentence.length <= 140) return firstSentence;
+  const cut = text.slice(0, 140);
+  return cut.slice(0, cut.lastIndexOf(" ")) + "…";
 }
 
 // Cost → retail: apply the markup, then round to a tidy .x9 style price point.
@@ -117,23 +190,38 @@ function retail(costEur: number): number {
   return Math.round(marked * 100) / 100;
 }
 
-function toGame(p: KinguinProduct): Game {
+// Returns null when the product cannot lawfully or honestly be listed — a
+// sanctioned activation region. Callers drop those rather than showing them.
+function toGame(p: KinguinProduct): Game | null {
+  const region = mapRegion(p.region);
+  if (!region) return null;
   const h = hash(p.id);
+  const kind = mapKind(p.name);
   return {
     slug: p.slug,
     title: p.name,
     platform: mapPlatform(p.platform),
-    region: mapRegion(p.region),
+    region,
     genre: mapGenre(p.genres),
-    kind: mapKind(p.name),
+    kind,
     price: retail(p.priceEur),
     wasPrice: null,
     rating: 0,
     reviews: 0,
     releaseYear: p.releaseDate ? new Date(p.releaseDate).getFullYear() : new Date().getFullYear(),
     hue: HUES[h % HUES.length],
-    tagline: p.description.replace(/<[^>]+>/g, "").slice(0, 120) || "Digital game key — instant delivery.",
+    tagline: toTagline(p.description),
     image: p.coverImage ?? p.screenshots[0] ?? null,
+    description: plain(p.description),
+    activationDetails: plain(p.activationDetails),
+    // Only software carries PC system requirements. Printing them on a gift
+    // card or a subscription is the misleading product data the audit flagged.
+    systemRequirements: kind === "Game" || kind === "DLC" ? plain(p.systemRequirements) : "",
+    developers: p.developers,
+    publishers: p.publishers,
+    languages: p.languages,
+    regionNote: p.region,
+    edition: mapEdition(p.name),
   };
 }
 
@@ -194,7 +282,7 @@ export async function getCatalog(
     const games = page.items
       .filter((i) => i.priceEur > 0 && i.qty > 0)
       .map(toGame)
-      .filter((g) => g.price <= MAX_RETAIL_EUR);
+      .filter((g): g is Game => g !== null && g.price <= MAX_RETAIL_EUR);
     // `total` is Kinguin's full match count for this query — the real size of
     // the live catalogue, not just the page we pulled.
     return { games, live: true, total: page.total };
@@ -240,7 +328,7 @@ export async function getCatalogGame(slug: string): Promise<Game | null> {
     const product = await getProduct(id);
     if (!product || product.priceEur <= 0) return null;
     const game = toGame(product);
-    return game.price <= MAX_RETAIL_EUR ? game : null;
+    return game && game.price <= MAX_RETAIL_EUR ? game : null;
   } catch (e) {
     console.error("Kinguin product fetch failed:", e);
     return null;
@@ -261,7 +349,6 @@ export interface HomeData {
   deals: Game[];
   topCharts: Game[];
   fresh: Game[];
-  preorders: Game[];
   underTen: Game[];
   byPlatform: { platform: string; games: Game[] }[];
   genres: string[];
@@ -275,7 +362,6 @@ const EMPTY_HOME: HomeData = {
   deals: [],
   topCharts: [],
   fresh: [],
-  preorders: [],
   underTen: [],
   byPlatform: [],
   genres: [],
@@ -323,7 +409,6 @@ export async function getHomeData(): Promise<HomeData> {
   const rest = pool.filter((g) => g.slug !== headline.slug);
   const deals = rest.filter((g) => discountPct(g) > 0).sort((a, b) => discountPct(b) - discountPct(a));
   const fresh = [...rest].sort((a, b) => b.releaseYear - a.releaseYear);
-  const preorders = rest.filter((g) => g.kind === "Pre-order");
 
   // "Up next" tiles are labelled from what the product actually is — a slot is
   // skipped rather than filled with something that does not fit the label.
@@ -341,7 +426,7 @@ export async function getHomeData(): Promise<HomeData> {
     { label: "Featured", game: headline },
     take(deals[0], "Deal of the day"),
     take(fresh[0], "New release"),
-    take(preorders[0] ?? deals[1], preorders[0] ? "Pre-order" : "Also on sale"),
+    take(deals[1], "Also on sale"),
   ].filter((s): s is StageSlot => s !== null);
 
   const tail = rest
@@ -393,7 +478,6 @@ export async function getHomeData(): Promise<HomeData> {
     deals: deals.slice(0, 12),
     topCharts,
     fresh: freshRail,
-    preorders: preorders.slice(0, 12),
     underTen,
     byPlatform,
     genres,

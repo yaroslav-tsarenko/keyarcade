@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCatalog } from "@/lib/catalog";
-import { discountPct } from "@/lib/mock-data";
+import { discountPct } from "@/lib/catalog-types";
 
 /**
  * A handful of real products for chrome that needs covers — the navigation

@@ -5,6 +5,7 @@ import { PaymentMarks } from "@/components/ui/PaymentMarks";
 import { NewsletterCard } from "./NewsletterCard";
 import { SITE, COMPANY, FOOTER_PLATFORMS } from "@/lib/site-config";
 import { PLATFORM_LINKS, GENRE_LINKS } from "@/lib/nav";
+import { CookieSettingsLink } from "@/components/sections/CookieConsent";
 
 const COLUMNS = [
   {
@@ -12,7 +13,6 @@ const COLUMNS = [
     links: [
       ...PLATFORM_LINKS.slice(0, 4),
       { label: "Deals", href: "/catalog?deals=1" },
-      { label: "Pre-orders", href: "/catalog?kind=Pre-order" },
       { label: "Gift cards", href: "/catalog?kind=Gift%20card" },
     ],
   },
@@ -65,7 +65,7 @@ export function Footer() {
           <Logo />
           <p className="mt-4 max-w-sm text-pretty text-ink-muted">
             {SITE.tagline} Original codes for Steam, Epic, Xbox, PlayStation,
-            Nintendo and GOG — delivered by email the minute you pay.
+            Nintendo and GOG — delivered by email once your payment is confirmed.
           </p>
         </div>
         <div className="md:justify-self-end">
@@ -93,7 +93,7 @@ export function Footer() {
         <PaymentMarks />
         <p className="inline-flex items-center gap-2 text-sm text-ink-muted">
           <ShieldCheck width={16} height={16} className="text-stock" aria-hidden />
-          Secure checkout · Original keys, instant delivery
+          Secure checkout · Original keys, automated delivery
         </p>
       </div>
 
@@ -106,7 +106,7 @@ export function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <p className="text-pretty">
             © {new Date().getFullYear()} {COMPANY.legalName} · Reg. no. {COMPANY.regNumber} ·{" "}
-            {COMPANY.address} · {COMPANY.email}
+            {COMPANY.address} · {COMPANY.email} · {COMPANY.phone}
           </p>
           <nav aria-label="Legal" className="flex flex-wrap gap-4">
             {LEGAL.map((l) => (
@@ -118,6 +118,7 @@ export function Footer() {
                 {l.label}
               </Link>
             ))}
+            <CookieSettingsLink className="ring-focus ring-focus-flat rounded-control text-ink-muted transition-colors hover:text-ink" />
           </nav>
         </div>
         <p className="text-pretty">

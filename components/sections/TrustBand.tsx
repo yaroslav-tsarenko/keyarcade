@@ -7,7 +7,8 @@ import { POLICY } from "@/lib/site-config";
 /**
  * Counts up numbers the store can actually prove: how many keys are live in
  * the catalogue right now, how many platforms they cover, and the refund
- * window from the policy. No order totals, no invented "happy customers".
+ * processing deadline from the policy. No order totals, no invented
+ * "happy customers".
  */
 export function TrustBand({
   keysLive,
@@ -19,7 +20,7 @@ export function TrustBand({
   const stats = [
     { value: keysLive, suffix: "", label: "Keys live right now" },
     { value: platforms, suffix: "", label: "Platforms covered" },
-    { value: POLICY.refundDays, suffix: "-day", label: "Refund window" },
+    { value: POLICY.refundDays, suffix: "-day", label: "Approved refunds paid within" },
     { value: 3, suffix: "", label: "Currencies at checkout" },
   ];
 

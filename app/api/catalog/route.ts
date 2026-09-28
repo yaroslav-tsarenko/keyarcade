@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCatalog, CATALOG_PAGE_SIZE } from "@/lib/catalog";
-import type { Genre } from "@/lib/mock-data";
+import type { Genre } from "@/lib/catalog-types";
 
 /**
  * One more page of the catalog wall. The catalog page pre-loads the first few

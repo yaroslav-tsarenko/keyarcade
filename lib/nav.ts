@@ -1,4 +1,4 @@
-import { GENRES, PLATFORMS } from "@/lib/mock-data";
+import { GENRES, PLATFORMS } from "@/lib/catalog-types";
 
 export interface NavTab {
   label: string;
@@ -13,7 +13,6 @@ export const NAV_TABS: NavTab[] = [
   { label: "Genres", href: "/catalog", panel: "genres" },
   { label: "Deals", href: "/catalog?deals=1" },
   { label: "New releases", href: "/catalog?sort=new" },
-  { label: "Pre-orders", href: "/catalog?kind=Pre-order" },
   { label: "Top charts", href: "/catalog?sort=top" },
   { label: "Gift cards", href: "/catalog?kind=Gift%20card" },
   { label: "Support", href: "/faq" },

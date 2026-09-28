@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { useFunctionalConsent } from "@/components/sections/CookieConsent";
 
 type Theme = "light" | "dark";
 
@@ -30,18 +31,21 @@ function initialTheme(): Theme {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState<Theme>(initialTheme);
+  const functionalOk = useFunctionalConsent();
 
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle("dark", theme === "dark");
     root.style.colorScheme = theme;
+    // Remembering the theme across visits is a functional cookie, so it is
+    // only written once consented. The theme still applies to this visit.
+    if (!functionalOk) return;
     try {
       localStorage.setItem(THEME_KEY, theme);
     } catch {
-      // Private browsing or blocked storage — the theme still applies for
-      // this page view, it just will not be remembered.
+      // Private browsing or blocked storage — nothing to remember it with.
     }
-  }, [theme]);
+  }, [theme, functionalOk]);
 
   const toggle = useCallback(
     () => setTheme((t) => (t === "light" ? "dark" : "light")),

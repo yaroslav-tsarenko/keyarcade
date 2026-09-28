@@ -5,7 +5,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { orderKeys, isKinguinConfigured } from "@/lib/kinguin";
 import { buildInvoice } from "@/lib/invoice";
 import { sendOrderEmail } from "@/lib/email";
-import { CURRENCIES, type CurrencyCode } from "@/lib/site-config";
+import { CURRENCIES, PURCHASE_LIMITS, type CurrencyCode } from "@/lib/site-config";
 
 interface CartItem {
   productId: string;
@@ -26,12 +26,38 @@ function demoKey(): string {
 
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as
-    | { items?: CartItem[]; email?: string; currency?: CurrencyCode }
+    | {
+        items?: CartItem[];
+        email?: string;
+        currency?: CurrencyCode;
+        withdrawalWaived?: boolean;
+      }
     | null;
 
   const items = body?.items ?? [];
   if (items.length === 0) {
     return NextResponse.json({ error: "Your cart is empty" }, { status: 400 });
+  }
+
+  // Consumer law lets us start delivery — and end the withdrawal right — only
+  // on the buyer's express request, so no key is issued without it.
+  if (body?.withdrawalWaived !== true) {
+    return NextResponse.json(
+      { error: "Please confirm you want delivery to start immediately" },
+      { status: 400 },
+    );
+  }
+
+  // Caps enforced server-side, not just in the UI: key products are a card
+  // testing and cash-out target, so one order cannot clear stock at volume.
+  const units = items.reduce((n, i) => n + i.qty, 0);
+  const orderValue = items.reduce((s, i) => s + i.priceEur * i.qty, 0);
+  if (
+    items.some((i) => i.qty > PURCHASE_LIMITS.maxQtyPerItem) ||
+    units > PURCHASE_LIMITS.maxItemsPerOrder ||
+    orderValue > PURCHASE_LIMITS.maxOrderValueEur
+  ) {
+    return NextResponse.json({ error: "This order exceeds our purchase limits" }, { status: 400 });
   }
 
   const user = await getCurrentUser();
