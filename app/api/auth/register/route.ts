@@ -18,13 +18,22 @@ const REQUIRED = [
 ] as const;
 
 export async function POST(req: Request) {
-  const body = (await req.json().catch(() => null)) as Record<string, string> | null;
+  const body = (await req.json().catch(() => null)) as (Record<string, string> & { acceptedTerms?: boolean }) | null;
   if (!body) return NextResponse.json({ error: "Invalid request" }, { status: 400 });
 
   for (const field of REQUIRED) {
     if (!body[field]?.trim()) {
       return NextResponse.json({ error: `Missing field: ${field}` }, { status: 400 });
     }
+  }
+
+  // The signup form blocks submission until the Terms & Privacy checkbox is
+  // ticked; enforce it here too so the API can't be used to bypass consent.
+  if (body.acceptedTerms !== true) {
+    return NextResponse.json(
+      { error: "You must accept the Terms & Conditions and Privacy Policy" },
+      { status: 400 },
+    );
   }
 
   const email = body.email.trim().toLowerCase();

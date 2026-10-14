@@ -91,7 +91,7 @@ export function AuthCard() {
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify({ ...form, acceptedTerms: agree }),
     });
     setBusy(false);
     if (!res.ok) {
@@ -205,10 +205,14 @@ export function AuthCard() {
                   </select>
                 </div>
                 <label className="flex items-start gap-2.5 text-xs font-medium text-ink-muted">
-                  <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)}
+                  <input type="checkbox" required checked={agree} onChange={(e) => setAgree(e.target.checked)}
                     className="mt-0.5 h-4 w-4 accent-[var(--signal)]" />
-                  I read and agree to the{" "}
-                  <Link href="/legal/terms" className="font-bold text-ink underline">terms and conditions</Link>.
+                  <span>
+                    I have read and agree to the{" "}
+                    <Link href="/legal/terms" target="_blank" className="font-bold text-ink underline">Terms &amp; Conditions</Link>
+                    {" "}and the{" "}
+                    <Link href="/legal/privacy" target="_blank" className="font-bold text-ink underline">Privacy Policy</Link>.
+                  </span>
                 </label>
               </>
             )}
