@@ -359,6 +359,22 @@ export async function getCatalogGame(slug: string): Promise<Game | null> {
   }
 }
 
+// The price and name checkout charges for a line, resolved from the live
+// product — never from the cart. Goes through getCatalogGame, so the same
+// markup, restricted-listing filter and MAX_RETAIL_EUR cap that decide what the
+// storefront shows also decide what can be bought and at what price. Returns
+// null when the product cannot be resolved (unknown id, out of the catalogue,
+// Kinguin not configured); checkout rejects such lines.
+export async function resolveCheckoutLine(
+  productId: string,
+): Promise<{ productId: string; name: string; priceEur: number } | null> {
+  // The id goes into a Kinguin URL path; refuse anything but a plain token.
+  if (!/^[A-Za-z0-9]{1,40}$/.test(productId)) return null;
+  const game = await getCatalogGame(productId);
+  if (!game || !(game.price > 0)) return null;
+  return { productId, name: game.title, priceEur: game.price };
+}
+
 // Checkout re-checks every line against the live product rather than trusting
 // the cart: a key that was in someone's cart, or reached via an old direct
 // link, before it was pulled must not be sellable.

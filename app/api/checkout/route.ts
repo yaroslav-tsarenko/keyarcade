@@ -3,11 +3,21 @@ import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { orderKeys, isKinguinConfigured } from "@/lib/kinguin";
-import { isSellable } from "@/lib/catalog";
+import { isSellable, resolveCheckoutLine } from "@/lib/catalog";
 import { buildInvoice } from "@/lib/invoice";
 import { sendOrderEmail } from "@/lib/email";
 import { CURRENCIES, PURCHASE_LIMITS, lookupPromo, type CurrencyCode } from "@/lib/site-config";
 
+// What the client posts. Only `productId` and `qty` are trusted; `name` and
+// `priceEur` are display hints from the cart and are re-resolved server-side.
+interface PostedCartItem {
+  productId: string;
+  name?: string;
+  qty: number;
+  priceEur?: number;
+}
+
+// A line as checkout charges it: name and price come from the live catalogue.
 interface CartItem {
   productId: string;
   name: string;
@@ -28,7 +38,7 @@ function demoKey(): string {
 export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as
     | {
-        items?: CartItem[];
+        items?: PostedCartItem[];
         email?: string;
         currency?: CurrencyCode;
         withdrawalWaived?: boolean;
@@ -36,8 +46,8 @@ export async function POST(req: Request) {
       }
     | null;
 
-  const items = body?.items ?? [];
-  if (items.length === 0) {
+  const cart = Array.isArray(body?.items) ? body.items : [];
+  if (cart.length === 0) {
     return NextResponse.json({ error: "Your cart is empty" }, { status: 400 });
   }
 
@@ -49,6 +59,32 @@ export async function POST(req: Request) {
       { status: 400 },
     );
   }
+
+  // Quantities must be whole positive numbers: a negative or fractional qty
+  // would turn the order total negative and credit the wallet.
+  if (cart.some((i) => !Number.isInteger(i?.qty) || i.qty < 1)) {
+    return NextResponse.json({ error: "Invalid item quantity" }, { status: 400 });
+  }
+
+  // The live catalogue is the only source of what we sell and at what price.
+  // With no supplier configured (local dev/demo without Kinguin keys) the
+  // storefront lists nothing, so there is nothing to price a line against —
+  // fail closed rather than fall back to the client's numbers, so a missing
+  // env var in production can never open the door to self-priced orders.
+  if (!isKinguinConfigured()) {
+    return NextResponse.json({ error: "Checkout is temporarily unavailable" }, { status: 503 });
+  }
+
+  // Every line is re-priced and re-named from the live product; the client's
+  // `priceEur` and `name` are ignored. A line we cannot resolve fails the order.
+  const resolved = await Promise.all(cart.map((i) => resolveCheckoutLine(String(i?.productId ?? ""))));
+  if (resolved.some((r) => r === null)) {
+    return NextResponse.json(
+      { error: "One or more items in your cart are no longer available. Please remove them and try again." },
+      { status: 400 },
+    );
+  }
+  const items: CartItem[] = cart.map((i, n) => ({ ...resolved[n]!, qty: i.qty }));
 
   // Caps enforced server-side, not just in the UI: key products are a card
   // testing and cash-out target, so one order cannot clear stock at volume.
@@ -64,7 +100,7 @@ export async function POST(req: Request) {
 
   // Restricted (RU/BY/CIS/VPN-locked) keys are pulled from the storefront, but
   // a stale cart or an old direct link could still post one here.
-  const sellable = await Promise.all(items.map((i) => isSellable(String(i.productId), String(i.name ?? ""))));
+  const sellable = await Promise.all(items.map((i) => isSellable(i.productId, i.name)));
   if (sellable.includes(false)) {
     return NextResponse.json(
       { error: "One or more items in your cart are no longer available. Please remove them and try again." },
