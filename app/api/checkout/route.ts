@@ -3,6 +3,7 @@ import { randomBytes } from "node:crypto";
 import { db } from "@/lib/db";
 import { getCurrentUser } from "@/lib/auth";
 import { orderKeys, isKinguinConfigured } from "@/lib/kinguin";
+import { isSellable } from "@/lib/catalog";
 import { buildInvoice } from "@/lib/invoice";
 import { sendOrderEmail } from "@/lib/email";
 import { CURRENCIES, PURCHASE_LIMITS, lookupPromo, type CurrencyCode } from "@/lib/site-config";
@@ -59,6 +60,16 @@ export async function POST(req: Request) {
     orderValue > PURCHASE_LIMITS.maxOrderValueEur
   ) {
     return NextResponse.json({ error: "This order exceeds our purchase limits" }, { status: 400 });
+  }
+
+  // Restricted (RU/BY/CIS/VPN-locked) keys are pulled from the storefront, but
+  // a stale cart or an old direct link could still post one here.
+  const sellable = await Promise.all(items.map((i) => isSellable(String(i.productId), String(i.name ?? ""))));
+  if (sellable.includes(false)) {
+    return NextResponse.json(
+      { error: "One or more items in your cart are no longer available. Please remove them and try again." },
+      { status: 400 },
+    );
   }
 
   const user = await getCurrentUser();

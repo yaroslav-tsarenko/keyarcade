@@ -87,6 +87,25 @@ const SANCTIONED_REGION_TERMS = [
   "luhansk",
 ];
 
+// Kinguin flags most Russia-locked keys with a terse "RU VPN" region and puts
+// the rest in the title ("RU VPN Required", "RU/CIS", "RU Language Only", "BR
+// VPN Activated"), which the region terms above never matched. The acquirer
+// wants every RU / BY / CIS / VPN-required listing gone, so both the region
+// and the title are screened. RU and BY only count as upper-case standalone
+// tokens — "Bound By Flame" is an ordinary game.
+const RESTRICTED_CODES = /(?:^|[^A-Za-z])(RU|BY)(?![A-Za-z])/;
+const RESTRICTED_WORDS = /\b(cis|vpn|russia|russian|belarus|belarusian)\b/i;
+
+function isRestrictedText(text: string): boolean {
+  return RESTRICTED_CODES.test(text) || RESTRICTED_WORDS.test(text);
+}
+
+/** True when a listing is region-locked to RU/BY/CIS or needs a VPN to
+ *  activate — such keys must never be shown, recommended or sold. */
+export function isRestrictedListing(p: { name: string; region: string }): boolean {
+  return isRestrictedText(p.name) || isRestrictedText(p.region);
+}
+
 function mapRegion(raw: string): Region | null {
   const r = raw.toLowerCase();
   if (SANCTIONED_REGION_TERMS.some((t) => r.includes(t))) return null;
@@ -191,8 +210,11 @@ function retail(costEur: number): number {
 }
 
 // Returns null when the product cannot lawfully or honestly be listed — a
-// sanctioned activation region. Callers drop those rather than showing them.
+// sanctioned activation region, or an RU/BY/CIS/VPN-locked key. Callers drop
+// those rather than showing them, so search, rails, recommendations, wishlist
+// and direct product links all lose them at once.
 function toGame(p: KinguinProduct): Game | null {
+  if (isRestrictedListing(p)) return null;
   const region = mapRegion(p.region);
   if (!region) return null;
   const h = hash(p.id);
@@ -335,6 +357,16 @@ export async function getCatalogGame(slug: string): Promise<Game | null> {
     console.error("Kinguin product fetch failed:", e);
     return null;
   }
+}
+
+// Checkout re-checks every line against the live product rather than trusting
+// the cart: a key that was in someone's cart, or reached via an old direct
+// link, before it was pulled must not be sellable.
+export async function isSellable(productId: string, name: string): Promise<boolean> {
+  if (isRestrictedText(name)) return false;
+  if (!isKinguinConfigured()) return true;
+  const product = await getProduct(productId);
+  return product !== null && toGame(product) !== null;
 }
 
 // Home-page data built entirely from live Kinguin products. Every rail below
